@@ -238,6 +238,7 @@ Required:
 Common runtime variables:
 - DJANGO_DEBUG
 - DJANGO_ALLOWED_HOSTS
+- DJANGO_ALLOW_LAN_HOSTS
 - SESSION_COOKIE_SECURE
 - CSRF_COOKIE_SECURE
 - SESSION_COOKIE_AGE
@@ -279,7 +280,8 @@ Defaults are defined in settings.py when variables are absent (except DJANGO_SEC
 Create .env in AvantechPortal root with at least:
 - DJANGO_SECRET_KEY=your-secret
 - DJANGO_DEBUG=True
-- DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost
+- DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost,portal.avantechph.local
+- DJANGO_ALLOW_LAN_HOSTS=True
 
 ### 9.4 Database and Admin
 1. Run migrations:
@@ -288,7 +290,13 @@ Create .env in AvantechPortal root with at least:
    python manage.py createsuperuser
 
 ### 9.5 Run Server
-- python manage.py runserver
+- For standard Django dev server:
+  python manage.py runserver
+- For access from other devices on the same Wi-Fi:
+  python manage.py runserver 0.0.0.0:8000
+- Open the site from another device using:
+  http://YOUR-COMPUTER-LAN-IP:8000
+- If you want the browser URL to stay as portal.avantechph.local without showing :port, serve the app on port 80 through a local reverse proxy or bind the app directly to port 80.
 
 ---
 

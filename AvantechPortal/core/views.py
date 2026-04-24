@@ -19,7 +19,6 @@ from django.db.utils import OperationalError
 from django.db.models import Count, Max, Sum
 from django.db.models import Q
 from django.db.models.functions import TruncMonth
-from django.http import HttpResponseForbidden
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -483,7 +482,7 @@ def development_hub(request):
 def development_feedback_add_comment(request, feedback_id):
 	can_manage_feedback = request.user.is_superuser or request.user.has_perm('core.change_developmentfeedback')
 	if not can_manage_feedback:
-		return HttpResponseForbidden('You do not have permission to comment on feedback.')
+		return _permission_denied_response(request, 'You do not have permission to comment on feedback.')
 
 	feedback = get_object_or_404(DevelopmentFeedback, pk=feedback_id)
 	comment = (request.POST.get('comment') or '').strip()
@@ -509,7 +508,7 @@ def development_feedback_add_comment(request, feedback_id):
 def development_feedback_update_status(request, feedback_id):
 	can_manage_feedback = request.user.is_superuser or request.user.has_perm('core.change_developmentfeedback')
 	if not can_manage_feedback:
-		return HttpResponseForbidden('You do not have permission to update feedback status.')
+		return _permission_denied_response(request, 'You do not have permission to update feedback status.')
 
 	feedback = get_object_or_404(DevelopmentFeedback, pk=feedback_id)
 	redirect_url = request.POST.get('next') or reverse('development_hub')
@@ -534,7 +533,7 @@ def development_feedback_update_status(request, feedback_id):
 def development_feedback_delete(request, feedback_id):
 	can_manage_feedback = request.user.is_superuser or request.user.has_perm('core.delete_developmentfeedback')
 	if not can_manage_feedback:
-		return HttpResponseForbidden('You do not have permission to delete feedback.')
+		return _permission_denied_response(request, 'You do not have permission to delete feedback.')
 
 	redirect_url = request.POST.get('next') or reverse('development_hub')
 	feedback = get_object_or_404(DevelopmentFeedback, pk=feedback_id)
@@ -553,7 +552,7 @@ def development_patch_notes(request):
 
 	if request.method == 'POST':
 		if not can_add_patch_notes:
-			return HttpResponseForbidden('You do not have permission to post patch notes.')
+			return _permission_denied_response(request, 'You do not have permission to post patch notes.')
 
 		patch_note_form = PatchNoteForm(request.POST, request.FILES)
 		if patch_note_form.is_valid():
@@ -639,7 +638,7 @@ def development_patch_note_update(request, patch_note_id):
 	patch_note = get_object_or_404(PatchNote, pk=patch_note_id)
 	can_change_patch_notes = request.user.is_superuser or request.user.has_perm('core.change_patchnote')
 	if not (can_change_patch_notes or patch_note.created_by_id == request.user.id):
-		return HttpResponseForbidden('You do not have permission to edit this patch note.')
+		return _permission_denied_response(request, 'You do not have permission to edit this patch note.')
 
 	form = PatchNoteForm(request.POST, request.FILES, instance=patch_note)
 	if form.is_valid():
@@ -658,7 +657,7 @@ def development_patch_note_delete(request, patch_note_id):
 	patch_note = get_object_or_404(PatchNote, pk=patch_note_id)
 	can_delete_patch_notes = request.user.is_superuser or request.user.has_perm('core.delete_patchnote')
 	if not (can_delete_patch_notes or patch_note.created_by_id == request.user.id):
-		return HttpResponseForbidden('You do not have permission to delete this patch note.')
+		return _permission_denied_response(request, 'You do not have permission to delete this patch note.')
 
 	patch_title = patch_note.title
 	patch_note.delete()
@@ -671,7 +670,7 @@ def development_patch_note_delete(request, patch_note_id):
 def development_patch_note_comment_add(request, patch_note_id):
 	patch_note = get_object_or_404(PatchNote, pk=patch_note_id)
 	if not patch_note.is_published and not (request.user.is_superuser or request.user.has_perm('core.change_patchnote')):
-		return HttpResponseForbidden('You do not have permission to comment on this patch note.')
+		return _permission_denied_response(request, 'You do not have permission to comment on this patch note.')
 	can_manage_patch_notes = request.user.is_superuser or request.user.has_perm('core.add_patchnote')
 
 	form = PatchNoteCommentForm(request.POST)
@@ -711,7 +710,7 @@ def development_patch_note_comment_add(request, patch_note_id):
 def development_patch_note_toggle_like(request, patch_note_id):
 	patch_note = get_object_or_404(PatchNote, pk=patch_note_id)
 	if not patch_note.is_published and not (request.user.is_superuser or request.user.has_perm('core.change_patchnote')):
-		return HttpResponseForbidden('You do not have permission to react to this patch note.')
+		return _permission_denied_response(request, 'You do not have permission to react to this patch note.')
 	reaction_value = (request.POST.get('reaction') or 'like').strip().lower()
 	allowed_reactions = {choice[0] for choice in PatchNoteReaction.REACTION_CHOICES}
 	if reaction_value not in allowed_reactions:
@@ -747,7 +746,7 @@ def development_patch_note_comment_edit(request, comment_id):
 	comment = get_object_or_404(PatchNoteComment.objects.select_related('created_by', 'patch_note'), pk=comment_id)
 	can_manage_comments = request.user.is_superuser or request.user.has_perm('core.change_patchnotecomment')
 	if not (can_manage_comments or comment.created_by_id == request.user.id):
-		return HttpResponseForbidden('You do not have permission to edit this comment.')
+		return _permission_denied_response(request, 'You do not have permission to edit this comment.')
 
 	new_comment = (request.POST.get('comment') or '').strip()
 	if not new_comment:
@@ -766,7 +765,7 @@ def development_patch_note_comment_delete(request, comment_id):
 	comment = get_object_or_404(PatchNoteComment.objects.select_related('created_by'), pk=comment_id)
 	can_manage_patch_notes = request.user.is_superuser or request.user.has_perm('core.delete_patchnotecomment')
 	if not (can_manage_patch_notes or comment.created_by_id == request.user.id):
-		return HttpResponseForbidden('You do not have permission to delete this comment.')
+		return _permission_denied_response(request, 'You do not have permission to delete this comment.')
 
 	comment.delete()
 	messages.success(request, 'Comment deleted.')
@@ -834,7 +833,7 @@ def lockout_notice(request):
 @login_required
 def support_lockout_center(request):
 	if not (request.user.is_superuser or request.user.has_perm('axes.view_accessattempt')):
-		return HttpResponseForbidden('You do not have permission to view lockout records.')
+		return _permission_denied_response(request, 'You do not have permission to view lockout records.')
 
 	query = (request.GET.get('q') or '').strip()
 	attempts = AccessAttempt.objects.all().order_by('-attempt_time')
@@ -846,7 +845,7 @@ def support_lockout_center(request):
 
 	if request.method == 'POST':
 		if not (request.user.is_superuser or request.user.has_perm('axes.delete_accessattempt')):
-			return HttpResponseForbidden('You do not have permission to unlock lockouts.')
+			return _permission_denied_response(request, 'You do not have permission to unlock lockouts.')
 
 		action_type = (request.POST.get('action_type') or 'manual').strip()
 		if action_type == 'row_unlock':
@@ -900,10 +899,21 @@ def support_lockout_center(request):
 	return render(request, 'core/lockout_support.html', context)
 
 
+def _permission_denied_response(request, message='You do not have permission to perform this action.'):
+	if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+		return JsonResponse({'ok': False, 'message': message}, status=403)
+
+	messages.error(request, message, extra_tags='permission-modal')
+	referer = (request.META.get('HTTP_REFERER') or '').strip()
+	if referer and url_has_allowed_host_and_scheme(referer, {request.get_host()}):
+		return redirect(referer)
+	return redirect('dashboard')
+
+
 def _require_permission(request, perm_name):
 	if request.user.is_superuser or request.user.has_perm(perm_name):
 		return None
-	return HttpResponseForbidden('You do not have permission to perform this action.')
+	return _permission_denied_response(request)
 
 
 def _can_manage_company_internet_accounts(user):
@@ -1536,7 +1546,7 @@ def clients_quick_view(request, client_id):
 	can_view_client = request.user.is_superuser or request.user.has_perm('core.view_client')
 	can_review_deletion = request.user.has_perm('core.approve_clientdeletionrequest')
 	if not (can_view_client or can_review_deletion):
-		return HttpResponseForbidden('You do not have permission to perform this action.')
+		return _permission_denied_response(request, 'You do not have permission to perform this action.')
 
 	client = get_object_or_404(
 		_filter_clients_by_visibility(
@@ -2193,6 +2203,11 @@ def assets_list(request):
 	context = {
 		'departments': departments,
 		'item_types': AssetItemType.objects.order_by('name'),
+		'can_view_asset_tracker_category': (
+			request.user.is_superuser
+			or request.user.has_perm('core.view_assettrackercategory')
+			or request.user.has_perm('core.view_assetitemtype')
+		),
 		'items_page': items_page,
 		'variant_counts_map': variant_counts_map,
 		'parent_total_stock_map': parent_total_stock_map,
@@ -2218,7 +2233,7 @@ def assets_company_accounts(request):
 	can_manage_internet_accounts = _can_manage_company_internet_accounts(request.user)
 	can_submit_internet_accounts = request.user.is_superuser or request.user.has_perm('core.add_companyinternetaccount')
 	if not can_manage_internet_accounts and not can_submit_internet_accounts:
-		return HttpResponseForbidden('You do not have permission to view this page.')
+		return _permission_denied_response(request, 'You do not have permission to view this page.')
 
 	internet_account_query = (request.GET.get('ia_q') or '').strip()
 	internet_accounts = CompanyInternetAccount.objects.select_related('submitted_by', 'submitted_by__profile').order_by('-created_at')
@@ -2283,7 +2298,7 @@ def assets_company_account_reveal(request, account_id):
 	account = get_object_or_404(CompanyInternetAccount.objects.select_related('submitted_by'), pk=account_id)
 	can_manage = _can_manage_company_internet_accounts(request.user)
 	if not can_manage and account.submitted_by_id != request.user.id:
-		return HttpResponseForbidden('You do not have permission to view this credential.')
+		return _permission_denied_response(request, 'You do not have permission to view this credential.')
 
 	unlock_form = CompanyInternetAccountUnlockForm(request.POST, user=request.user)
 	if unlock_form.is_valid():
@@ -2686,9 +2701,13 @@ def assets_variants_bulk_delete(request, item_id):
 
 @login_required
 def assets_item_types_list(request):
-	restricted_response = _require_permission(request, 'core.view_assetitemtype')
-	if restricted_response:
-		return restricted_response
+	can_view_categories = (
+		request.user.is_superuser
+		or request.user.has_perm('core.view_assettrackercategory')
+		or request.user.has_perm('core.view_assetitemtype')
+	)
+	if not can_view_categories:
+		return _permission_denied_response(request, 'You do not have permission to perform this action.')
 
 	query = (request.GET.get('q') or '').strip()
 	item_types = AssetItemType.objects.order_by('name')
@@ -3441,7 +3460,10 @@ def _get_accountability_report_queryset(request):
 	start_date_raw = (request.GET.get('start_date') or '').strip()
 	end_date_raw = (request.GET.get('end_date') or '').strip()
 
-	queryset = AssetAccountability.objects.select_related('item', 'borrowed_by').filter(request_status='approved').order_by('-date_borrowed')
+	queryset = _filter_accountability_by_visibility(
+		request,
+		AssetAccountability.objects.select_related('item', 'borrowed_by').filter(request_status='approved'),
+	).order_by('-date_borrowed')
 	report_scope_label = 'All Dates'
 	resolved_month = ''
 	resolved_start_date = ''
@@ -3481,6 +3503,17 @@ def _get_accountability_report_queryset(request):
 		'end_date': resolved_end_date,
 	}
 	return queryset, report_scope_label, filter_state
+
+
+def _can_review_accountability_requests(user):
+	return user.is_superuser or user.has_perm('core.change_assetaccountability')
+
+
+def _filter_accountability_by_visibility(request, queryset):
+	"""Limit accountability visibility to own records for non-reviewers."""
+	if _can_review_accountability_requests(request.user):
+		return queryset
+	return queryset.filter(borrowed_by=request.user)
 
 
 @login_required
@@ -3674,15 +3707,22 @@ def accountability_list(request):
 
 	query = (request.GET.get('q') or '').strip()
 	status_filter = (request.GET.get('status') or '').strip()
+	can_review_requests = _can_review_accountability_requests(request.user)
 
 	records = (
-		AssetAccountability.objects
+		_filter_accountability_by_visibility(
+			request,
+			AssetAccountability.objects
 		.select_related('item', 'borrowed_by', 'borrowed_by__profile')
 		.prefetch_related('return_proofs')
 		.filter(request_status='approved')
+		)
 		.order_by('-date_borrowed')
 	)
-	pending_requests = AssetAccountability.objects.select_related('item', 'borrowed_by', 'borrowed_by__profile').filter(request_status='pending').order_by('-created_at')
+	pending_requests = _filter_accountability_by_visibility(
+		request,
+		AssetAccountability.objects.select_related('item', 'borrowed_by', 'borrowed_by__profile').filter(request_status='pending'),
+	).order_by('-created_at')
 
 	if query:
 		records = records.filter(
@@ -3712,7 +3752,6 @@ def accountability_list(request):
 
 	records_page = Paginator(records, 20).get_page(request.GET.get('page'))
 	pending_requests_page = Paginator(pending_requests, 20).get_page(request.GET.get('pending_page'))
-	can_review_requests = request.user.is_superuser or request.user.has_perm('core.change_assetaccountability')
 	borrower_ids = [
 		row.borrowed_by_id
 		for row in list(records_page.object_list) + list(pending_requests_page.object_list)
@@ -3743,11 +3782,12 @@ def accountability_list(request):
 		'borrower_profiles_map': borrower_profiles_map,
 		'return_proofs_map': return_proofs_map,
 		'can_review_requests': can_review_requests,
+		'can_manage_approved_records': request.user.is_superuser or request.user.has_perm('core.change_assetaccountability') or request.user.has_perm('core.delete_assetaccountability'),
 		'query': query,
 		'status_filter': status_filter,
-		'total_pending_requests': AssetAccountability.objects.filter(request_status='pending').count(),
-		'total_borrowed_active': AssetAccountability.objects.filter(request_status='approved', status='borrowed').count(),
-		'total_returned': AssetAccountability.objects.filter(request_status='approved', status='returned').count(),
+		'total_pending_requests': _filter_accountability_by_visibility(request, AssetAccountability.objects.filter(request_status='pending')).count(),
+		'total_borrowed_active': _filter_accountability_by_visibility(request, AssetAccountability.objects.filter(request_status='approved', status='borrowed')).count(),
+		'total_returned': _filter_accountability_by_visibility(request, AssetAccountability.objects.filter(request_status='approved', status='returned')).count(),
 	}
 	return render(request, 'core/accountability_list.html', context)
 

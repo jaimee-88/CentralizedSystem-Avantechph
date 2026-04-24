@@ -68,6 +68,17 @@
                                     <span>Select all / Unselect all</span>
                                 </label>
                             </div>
+                            <div class="input-group input-group-sm mb-2">
+                                <span class="input-group-text">Search</span>
+                                <input
+                                    type="search"
+                                    id="userPermissionSearch"
+                                    class="form-control"
+                                    placeholder="Find permission (e.g., view_assetitem)"
+                                    autocomplete="off"
+                                >
+                                <button type="button" class="btn btn-outline-secondary d-none" id="userPermissionSearchClear">Clear</button>
+                            </div>
                             <div class="border rounded p-2 compact-permission-panel" data-field-kind="{{ field.name }}">
                                 {% for group in form.grouped_user_permissions %}
                                     <details class="permission-category" {% if forloop.first %}open{% endif %}>
@@ -94,7 +105,7 @@
                                                 </thead>
                                                 <tbody>
                                                     {% for item in group.items %}
-                                                        <tr>
+                                                        <tr class="js-user-permission-row">
                                                             <td>{{ item.label }}</td>
                                                             <td class="text-center">
                                                                 <input type="checkbox" class="form-check-input js-category-item" data-category-key="user-perm-category-{{ forloop.parentloop.counter }}" name="user_permissions" value="{{ item.value }}" {% if item.checked %}checked{% endif %}>
@@ -109,6 +120,7 @@
                                     <div class="text-secondary text-center py-2">No permissions available.</div>
                                 {% endfor %}
                             </div>
+                            <div class="small text-secondary mt-2 d-none" id="userPermissionSearchEmpty">No permissions matched your search.</div>
                             {% if field.help_text %}
                                 <div class="form-text">{{ field.help_text }}</div>
                             {% endif %}
@@ -170,6 +182,10 @@
         const rolePreviewModalElement = document.getElementById('rolePermissionPreviewModal');
         const rolePreviewBody = document.getElementById('rolePermissionPreviewBody');
         const rolePreviewModal = rolePreviewModalElement ? new bootstrap.Modal(rolePreviewModalElement) : null;
+        const permissionPanel = document.querySelector('[data-field-kind="user_permissions"]');
+        const permissionSearchInput = document.getElementById('userPermissionSearch');
+        const permissionSearchClearButton = document.getElementById('userPermissionSearchClear');
+        const permissionSearchEmpty = document.getElementById('userPermissionSearchEmpty');
         const escapeHtml = (value) => String(value || '')
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -241,6 +257,116 @@
             });
         });
 
+        const normalizeSearchText = (value) => String(value || '')
+            .toLowerCase()
+            .replace(/[^a-z0-9\s]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        const isSubsequenceMatch = (needle, haystack) => {
+            if (!needle) {
+                return true;
+            }
+            let index = 0;
+            for (const char of haystack) {
+                if (char === needle[index]) {
+                    index += 1;
+                    if (index >= needle.length) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+
+        const isFuzzyPermissionMatch = (query, label, categoryLabel) => {
+            if (!query) {
+                return true;
+            }
+
+            const source = `${label} ${categoryLabel}`.toLowerCase();
+            if (source.includes(query)) {
+                return true;
+            }
+
+            const normalizedSource = normalizeSearchText(source);
+            const normalizedQuery = normalizeSearchText(query);
+            if (!normalizedQuery) {
+                return true;
+            }
+
+            if (normalizedSource.includes(normalizedQuery)) {
+                return true;
+            }
+
+            const collapsedSource = normalizedSource.replace(/\s+/g, '');
+            const collapsedQuery = normalizedQuery.replace(/\s+/g, '');
+            if (isSubsequenceMatch(collapsedQuery, collapsedSource)) {
+                return true;
+            }
+
+            const queryTokens = normalizedQuery.split(' ').filter(Boolean);
+            if (!queryTokens.length) {
+                return true;
+            }
+
+            return queryTokens.every((token) => (
+                normalizedSource.includes(token) || isSubsequenceMatch(token, collapsedSource)
+            ));
+        };
+
+        const filterUserPermissions = () => {
+            if (!permissionPanel) {
+                return;
+            }
+
+            const rawQuery = permissionSearchInput ? permissionSearchInput.value : '';
+            const query = String(rawQuery || '').trim().toLowerCase();
+            const categories = permissionPanel.querySelectorAll('.permission-category');
+            let visiblePermissionCount = 0;
+
+            categories.forEach((category) => {
+                const rows = category.querySelectorAll('.js-user-permission-row');
+                const categoryLabel = (category.querySelector('.fw-semibold')?.textContent || '').trim();
+                let hasVisibleRows = false;
+
+                rows.forEach((row) => {
+                    const permissionLabel = (row.querySelector('td')?.textContent || '').trim().toLowerCase();
+                    const isVisible = isFuzzyPermissionMatch(query, permissionLabel, categoryLabel);
+                    row.classList.toggle('d-none', !isVisible);
+                    if (isVisible) {
+                        hasVisibleRows = true;
+                        visiblePermissionCount += 1;
+                    }
+                });
+
+                category.classList.toggle('d-none', !hasVisibleRows);
+                if (query && hasVisibleRows) {
+                    category.open = true;
+                }
+            });
+
+            if (permissionSearchClearButton) {
+                permissionSearchClearButton.classList.toggle('d-none', !query);
+            }
+
+            if (permissionSearchEmpty) {
+                permissionSearchEmpty.classList.toggle('d-none', !query || visiblePermissionCount > 0);
+            }
+        };
+
+        if (permissionSearchInput) {
+            permissionSearchInput.addEventListener('input', filterUserPermissions);
+        }
+
+        if (permissionSearchClearButton && permissionSearchInput) {
+            permissionSearchClearButton.addEventListener('click', () => {
+                permissionSearchInput.value = '';
+                permissionSearchInput.focus();
+                filterUserPermissions();
+            });
+        }
+
         const renderRolePermissionPreview = (roleId, roleName) => {
             if (!rolePreviewBody) {
                 return;
@@ -306,6 +432,8 @@
         document.querySelectorAll('.js-category-toggle').forEach((toggle) => {
             syncCategoryToggleState(toggle.dataset.categoryKey);
         });
+
+        filterUserPermissions();
 
         };
 

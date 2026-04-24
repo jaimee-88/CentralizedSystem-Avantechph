@@ -318,7 +318,9 @@
                 <thead class="table-light">
                     <tr>
                         <th style="width: 42px;">
+                            {% if can_manage_approved_records %}
                             <input type="checkbox" class="form-check-input" id="approvedSelectAll" aria-label="Select all approved records">
+                            {% endif %}
                         </th>
                         <th>Item Code</th>
                         <th>Item Name</th>
@@ -335,12 +337,14 @@
                     {% for record in records_page %}
                     <tr class="js-approved-record-row" role="button" style="cursor: pointer;" title="Click to view record details">
                         <td>
+                            {% if can_manage_approved_records %}
                             <input
                                 type="checkbox"
                                 class="form-check-input js-approved-row-checkbox"
                                 value="{{ record.id }}"
                                 aria-label="Select approved record {{ record.id }}"
                             >
+                            {% endif %}
                         </td>
                         <td>
                             <span class="badge bg-info">{{ record.item.item_code }}</span>
@@ -442,6 +446,7 @@
             </table>
         </div>
 
+        {% if can_manage_approved_records %}
         <div id="approvedBulkActionBar" class="bulk-action-bar d-none" role="region" aria-label="Approved records bulk actions">
             <div class="bulk-action-content">
                 <span class="bulk-action-count" id="approvedBulkCount">0 selected</span>
@@ -482,6 +487,7 @@
                 </button>
             </div>
         </div>
+        {% endif %}
     </div>
 
     <!-- Pagination -->

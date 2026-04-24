@@ -353,6 +353,9 @@ class AssetItemType(models.Model):
 
 	class Meta:
 		ordering = ['name']
+		permissions = [
+			('view_assettrackercategory', 'Can view asset tracker category'),
+		]
 
 	def __str__(self):
 		return self.name

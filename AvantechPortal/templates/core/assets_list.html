@@ -46,7 +46,9 @@
         <p class="text-secondary mb-0">Track assets by department with automatic Item IDs and printable asset tags.</p>
     </div>
     <div class="d-flex gap-2">
+        {% if can_view_asset_tracker_category %}
         <a class="btn btn-outline-secondary" href="{% url 'assets_item_types_list' %}">Item Types</a>
+        {% endif %}
         <a class="btn btn-outline-success" href="{% url 'assets_departments_list' %}">Manage Departments</a>
         <a class="btn btn-outline-success" href="{% url 'assets_company_accounts' %}">Company Internet Accounts</a>
         <a class="btn btn-success" href="{% url 'assets_item_create' %}">Add Asset Item</a>

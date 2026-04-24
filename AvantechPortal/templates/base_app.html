@@ -50,8 +50,8 @@
                                 <span class="nav-label">Clients</span>
                             </a>
                         {% endif %}
-                        {% if request.user.is_superuser or perms.core.view_assetitem %}
-                            <a class="nav-link app-nav-link {% if request.resolver_match.url_name == 'assets_list' or request.resolver_match.url_name == 'assets_department_create' or request.resolver_match.url_name == 'assets_department_update' or request.resolver_match.url_name == 'assets_item_create' or request.resolver_match.url_name == 'assets_item_update' or request.resolver_match.url_name == 'assets_item_delete' or request.resolver_match.url_name == 'assets_item_types_list' or request.resolver_match.url_name == 'assets_item_type_create' or request.resolver_match.url_name == 'assets_item_type_update' or request.resolver_match.url_name == 'assets_item_type_delete' or request.resolver_match.url_name == 'assets_tag_document' or request.resolver_match.url_name == 'accountability_list' or request.resolver_match.url_name == 'accountability_create' or request.resolver_match.url_name == 'assets_company_accounts' or request.resolver_match.url_name == 'assets_company_account_submit' or request.resolver_match.url_name == 'assets_company_account_reveal' %}active{% endif %}" href="{% url 'assets_list' %}">
+                        {% if request.user.is_superuser or perms.core.view_assetitem or perms.core.view_assettrackercategory %}
+                            <a class="nav-link app-nav-link {% if request.resolver_match.url_name == 'assets_list' or request.resolver_match.url_name == 'assets_department_create' or request.resolver_match.url_name == 'assets_department_update' or request.resolver_match.url_name == 'assets_item_create' or request.resolver_match.url_name == 'assets_item_update' or request.resolver_match.url_name == 'assets_item_delete' or request.resolver_match.url_name == 'assets_item_types_list' or request.resolver_match.url_name == 'assets_item_type_create' or request.resolver_match.url_name == 'assets_item_type_update' or request.resolver_match.url_name == 'assets_item_type_delete' or request.resolver_match.url_name == 'assets_tag_document' or request.resolver_match.url_name == 'accountability_list' or request.resolver_match.url_name == 'accountability_create' or request.resolver_match.url_name == 'assets_company_accounts' or request.resolver_match.url_name == 'assets_company_account_submit' or request.resolver_match.url_name == 'assets_company_account_reveal' %}active{% endif %}" href="{% if request.user.is_superuser or perms.core.view_assetitem %}{% url 'assets_list' %}{% else %}{% url 'assets_item_types_list' %}{% endif %}">
                                 <span class="nav-logo" aria-hidden="true">
                                     <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <rect x="3.5" y="4" width="17" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/>
@@ -248,7 +248,11 @@
                 {% if messages %}
                     <div class="mb-3">
                         {% for message in messages %}
-                            <div class="alert alert-{{ message.tags|default:'info' }} mb-2" role="alert">{{ message }}</div>
+                            {% if 'permission-modal' in message.tags %}
+                                <div class="d-none js-permission-modal-message" data-message="{{ message|escapejs }}"></div>
+                            {% else %}
+                                <div class="alert alert-{{ message.tags|default:'info' }} mb-2" role="alert">{{ message }}</div>
+                            {% endif %}
                         {% endfor %}
                     </div>
                 {% endif %}
@@ -289,8 +293,8 @@
                             <span class="nav-label">Clients</span>
                         </a>
                     {% endif %}
-                    {% if request.user.is_superuser or perms.core.view_assetitem %}
-                        <a class="nav-link app-nav-link {% if request.resolver_match.url_name == 'assets_list' or request.resolver_match.url_name == 'assets_department_create' or request.resolver_match.url_name == 'assets_department_update' or request.resolver_match.url_name == 'assets_item_create' or request.resolver_match.url_name == 'assets_item_update' or request.resolver_match.url_name == 'assets_item_delete' or request.resolver_match.url_name == 'assets_item_types_list' or request.resolver_match.url_name == 'assets_item_type_create' or request.resolver_match.url_name == 'assets_item_type_update' or request.resolver_match.url_name == 'assets_item_type_delete' or request.resolver_match.url_name == 'assets_tag_document' or request.resolver_match.url_name == 'accountability_list' or request.resolver_match.url_name == 'accountability_create' or request.resolver_match.url_name == 'assets_company_accounts' or request.resolver_match.url_name == 'assets_company_account_submit' or request.resolver_match.url_name == 'assets_company_account_reveal' %}active{% endif %}" href="{% url 'assets_list' %}">
+                    {% if request.user.is_superuser or perms.core.view_assetitem or perms.core.view_assettrackercategory %}
+                        <a class="nav-link app-nav-link {% if request.resolver_match.url_name == 'assets_list' or request.resolver_match.url_name == 'assets_department_create' or request.resolver_match.url_name == 'assets_department_update' or request.resolver_match.url_name == 'assets_item_create' or request.resolver_match.url_name == 'assets_item_update' or request.resolver_match.url_name == 'assets_item_delete' or request.resolver_match.url_name == 'assets_item_types_list' or request.resolver_match.url_name == 'assets_item_type_create' or request.resolver_match.url_name == 'assets_item_type_update' or request.resolver_match.url_name == 'assets_item_type_delete' or request.resolver_match.url_name == 'assets_tag_document' or request.resolver_match.url_name == 'accountability_list' or request.resolver_match.url_name == 'accountability_create' or request.resolver_match.url_name == 'assets_company_accounts' or request.resolver_match.url_name == 'assets_company_account_submit' or request.resolver_match.url_name == 'assets_company_account_reveal' %}active{% endif %}" href="{% if request.user.is_superuser or perms.core.view_assetitem %}{% url 'assets_list' %}{% else %}{% url 'assets_item_types_list' %}{% endif %}">
                             <span class="nav-logo" aria-hidden="true">
                                 <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <rect x="3.5" y="4" width="17" height="16" rx="2" stroke="currentColor" stroke-width="1.8"/>
@@ -419,6 +423,20 @@
                 </div>
                 <div class="modal-body" id="userQuickProfileModalBody">
                     <div class="text-secondary">Loading profile...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="permissionDeniedModal" tabindex="-1" aria-labelledby="permissionDeniedModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-sm">
+                {% include 'core/includes/modal_header.html' with modal_title='Access Denied' modal_title_id='permissionDeniedModalLabel' %}
+                <div class="modal-body">
+                    <p class="mb-0" id="permissionDeniedModalMessage">You do not have permission to perform this action.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
@@ -601,6 +619,19 @@
                 shell.classList.toggle('sidebar-collapsed');
             });
         }
+
+        (function () {
+            const trigger = document.querySelector('.js-permission-modal-message');
+            const modalEl = document.getElementById('permissionDeniedModal');
+            const messageEl = document.getElementById('permissionDeniedModalMessage');
+            if (!trigger || !modalEl || !messageEl || !window.bootstrap || !window.bootstrap.Modal) {
+                return;
+            }
+
+            messageEl.textContent = trigger.getAttribute('data-message') || 'You do not have permission to perform this action.';
+            const modal = new window.bootstrap.Modal(modalEl);
+            modal.show();
+        })();
 
         (function () {
             const notificationList = document.getElementById('notificationDropdownList');

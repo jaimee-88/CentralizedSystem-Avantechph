@@ -1,9 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import FileResponse, HttpResponseForbidden
+from django.http import FileResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
 from .models import SystemBackup, SystemBackupSchedule
@@ -25,6 +26,17 @@ def _can_manage_system_backups(user):
     )
 
 
+def _permission_denied_response(request, message='You do not have permission to perform this action.'):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({'ok': False, 'message': message}, status=403)
+
+    messages.error(request, message, extra_tags='permission-modal')
+    referer = (request.META.get('HTTP_REFERER') or '').strip()
+    if referer and url_has_allowed_host_and_scheme(referer, {request.get_host()}):
+        return redirect(referer)
+    return redirect('dashboard')
+
+
 def _parse_boolean_field(post_data, key):
     return post_data.get(key) in {'1', 'true', 'on', 'yes'}
 
@@ -44,7 +56,7 @@ def _format_file_size(size_bytes):
 @login_required
 def system_hub(request):
     if not _can_manage_system_backups(request.user):
-        return HttpResponseForbidden('You do not have permission to manage system backups.')
+        return _permission_denied_response(request, 'You do not have permission to manage system backups.')
 
     run_due_system_backups()
     schedule = get_or_create_primary_schedule(updated_by=request.user)
@@ -112,7 +124,7 @@ def system_hub(request):
 @require_POST
 def system_backup_run_now(request):
     if not _can_manage_system_backups(request.user):
-        return HttpResponseForbidden('You do not have permission to create backups.')
+        return _permission_denied_response(request, 'You do not have permission to create backups.')
 
     schedule = get_or_create_primary_schedule(updated_by=request.user)
     try:
@@ -130,7 +142,7 @@ def system_backup_run_now(request):
 @login_required
 def system_backup_download(request, backup_id):
     if not _can_manage_system_backups(request.user):
-        return HttpResponseForbidden('You do not have permission to download backups.')
+        return _permission_denied_response(request, 'You do not have permission to download backups.')
 
     backup = get_object_or_404(SystemBackup, pk=backup_id)
     if not backup.archive:
@@ -147,7 +159,7 @@ def system_backup_download(request, backup_id):
 @login_required
 def system_backup_open(request, backup_id):
     if not _can_manage_system_backups(request.user):
-        return HttpResponseForbidden('You do not have permission to open backups.')
+        return _permission_denied_response(request, 'You do not have permission to open backups.')
 
     backup = get_object_or_404(SystemBackup, pk=backup_id)
     if not backup.archive:
@@ -161,7 +173,7 @@ def system_backup_open(request, backup_id):
 @require_POST
 def system_backup_restore(request, backup_id):
     if not _can_manage_system_backups(request.user):
-        return HttpResponseForbidden('You do not have permission to restore backups.')
+        return _permission_denied_response(request, 'You do not have permission to restore backups.')
 
     backup = get_object_or_404(SystemBackup, pk=backup_id)
     try:
@@ -177,7 +189,7 @@ def system_backup_restore(request, backup_id):
 @require_POST
 def system_backup_delete(request, backup_id):
     if not _can_manage_system_backups(request.user):
-        return HttpResponseForbidden('You do not have permission to delete backups.')
+        return _permission_denied_response(request, 'You do not have permission to delete backups.')
 
     backup = get_object_or_404(SystemBackup, pk=backup_id)
     backup_name = backup.backup_name
