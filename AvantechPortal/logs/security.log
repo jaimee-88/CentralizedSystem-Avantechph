@@ -1,0 +1,212 @@
+[2026-04-24 11:17:32,312] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:17:32,583] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:17:58,752] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:17:59,055] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:18:27,083] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:21:14,849] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 11:21:14,850] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 02:21:14.780741+00:00
+[2026-04-24 11:21:14,853] WARNING axes.handlers.database: AXES: New login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"}. Created new record in the database.
+[2026-04-24 11:21:14,996] WARNING auth_security: Failed login username=admin ip=127.0.0.1
+[2026-04-24 11:21:22,426] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 11:21:22,427] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 02:21:22.360918+00:00
+[2026-04-24 11:21:22,429] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 11:21:22,590] WARNING auth_security: Failed login username=admin ip=127.0.0.1
+[2026-04-24 11:21:45,429] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 11:21:45,430] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 02:21:45.364414+00:00
+[2026-04-24 11:21:45,432] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 11:21:45,565] WARNING auth_security: Failed login username=admin ip=127.0.0.1
+[2026-04-24 11:21:57,344] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 11:21:57,345] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 02:21:57.278098+00:00
+[2026-04-24 11:21:57,346] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 11:21:57,477] WARNING auth_security: Failed login username=admin ip=127.0.0.1
+[2026-04-24 11:22:23,620] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 11:22:23,621] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 02:22:23.553161+00:00
+[2026-04-24 11:22:23,623] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 11:22:23,704] WARNING axes.handlers.database: AXES: Locking out {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"} after repeated login failures.
+[2026-04-24 11:22:23,770] ERROR auth_security: User locked out username=admin ip=127.0.0.1
+[2026-04-24 11:22:23,836] WARNING auth_security: Failed login username=admin ip=127.0.0.1
+[2026-04-24 11:23:35,053] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:23:35,186] INFO axes.handlers.database: AXES: Reset 1 access attempts from database.
+[2026-04-24 11:24:14,339] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 11:24:14,340] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 02:24:14.270345+00:00
+[2026-04-24 11:24:14,341] WARNING axes.handlers.database: AXES: New login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"}. Created new record in the database.
+[2026-04-24 11:24:14,475] WARNING auth_security: Failed login username=admin ip=127.0.0.1
+[2026-04-24 11:24:27,516] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 11:24:27,516] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 02:24:27.443354+00:00
+[2026-04-24 11:24:27,518] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 11:24:27,654] WARNING auth_security: Failed login username=admin ip=127.0.0.1
+[2026-04-24 11:26:48,531] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:27:10,511] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:28:11,225] INFO axes.handlers.database: AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"}.
+[2026-04-24 11:28:11,226] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 02:28:11.082676+00:00
+[2026-04-24 11:28:11,357] INFO axes.handlers.database: AXES: Reset 1 access attempts from database.
+[2026-04-24 11:28:11,357] INFO axes.handlers.database: AXES: Deleted 1 failed login attempts by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"} from database.
+[2026-04-24 11:28:11,541] INFO auth_security: Successful login user=jaime ip=127.0.0.1 suspicious=False
+[2026-04-24 11:32:41,270] INFO axes.handlers.database: AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"}.
+[2026-04-24 11:32:41,271] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 02:32:41.094607+00:00
+[2026-04-24 11:32:41,345] INFO axes.handlers.database: AXES: Reset 0 access attempts from database.
+[2026-04-24 11:32:41,345] INFO axes.handlers.database: AXES: Deleted 0 failed login attempts by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"} from database.
+[2026-04-24 11:32:41,485] INFO auth_security: Successful login user=jaime ip=127.0.0.1 suspicious=False
+[2026-04-24 11:43:43,788] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:44:29,589] INFO axes.handlers.database: AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"}.
+[2026-04-24 11:44:29,590] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 02:44:29.454690+00:00
+[2026-04-24 11:44:29,672] INFO axes.handlers.database: AXES: Reset 0 access attempts from database.
+[2026-04-24 11:44:29,672] INFO axes.handlers.database: AXES: Deleted 0 failed login attempts by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"} from database.
+[2026-04-24 11:44:29,888] INFO auth_security: Successful login user=reynier ip=::1 suspicious=False
+[2026-04-24 11:58:23,933] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:58:30,565] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:58:38,229] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:59:35,498] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 11:59:49,517] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 12:00:15,820] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 12:00:29,232] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 12:11:39,514] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 12:43:48,845] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 12:44:17,763] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 12:45:00,743] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:13:56,627] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:21:42,815] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:25:26,754] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:32:02,262] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:32:15,122] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:33:32,498] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:42:21,535] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:42:21,806] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:48:36,850] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:51:11,990] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:51:11,990] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:51:12,282] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:51:25,422] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:51:25,697] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 13:58:38,129] INFO axes.handlers.database: AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0", path_info: "/login/"}.
+[2026-04-24 13:58:38,129] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 04:58:37.986585+00:00
+[2026-04-24 13:58:38,203] INFO axes.handlers.database: AXES: Reset 0 access attempts from database.
+[2026-04-24 13:58:38,204] INFO axes.handlers.database: AXES: Deleted 0 failed login attempts by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0", path_info: "/login/"} from database.
+[2026-04-24 13:58:38,411] INFO auth_security: Successful login user=reynier ip=192.168.1.157 suspicious=True
+[2026-04-24 14:01:20,984] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:01:36,384] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:03:11,275] INFO axes.handlers.database: AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"}.
+[2026-04-24 14:03:11,275] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 05:03:11.124298+00:00
+[2026-04-24 14:03:11,350] INFO axes.handlers.database: AXES: Reset 0 access attempts from database.
+[2026-04-24 14:03:11,350] INFO axes.handlers.database: AXES: Deleted 0 failed login attempts by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"} from database.
+[2026-04-24 14:03:11,616] INFO auth_security: Successful login user=jaime ip=192.168.1.123 suspicious=True
+[2026-04-24 14:24:51,765] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:24:52,111] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:42:48,781] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:43:11,597] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:43:19,217] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:43:23,913] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:43:48,704] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:43:53,393] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:44:03,091] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:47:11,503] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:47:11,503] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:47:54,538] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:47:54,538] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:49:52,018] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:49:58,548] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:49:58,548] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:50:09,871] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:50:09,872] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 14:53:48,280] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:08:54,038] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:08:58,772] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:11:13,149] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 15:11:13,780] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 06:11:12.474829+00:00
+[2026-04-24 15:11:13,789] WARNING axes.handlers.database: AXES: New login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"}. Created new record in the database.
+[2026-04-24 15:11:14,349] WARNING auth_security: Failed login username=admin ip=192.168.1.29
+[2026-04-24 15:11:15,340] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 15:11:15,341] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 06:11:15.245573+00:00
+[2026-04-24 15:11:15,343] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 15:11:15,553] WARNING auth_security: Failed login username=admin ip=192.168.1.29
+[2026-04-24 15:11:58,824] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 15:11:58,825] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 06:11:58.759141+00:00
+[2026-04-24 15:11:58,827] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 15:11:58,976] WARNING auth_security: Failed login username=admin ip=192.168.1.29
+[2026-04-24 15:12:24,228] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 15:12:24,229] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 06:12:24.163619+00:00
+[2026-04-24 15:12:24,231] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 15:12:24,508] WARNING auth_security: Failed login username=admin ip=192.168.1.29
+[2026-04-24 15:18:35,079] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:18:59,787] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:19:20,547] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:19:30,232] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:21:57,998] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:22:26,822] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:30:04,532] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:30:12,736] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:45:16,395] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:45:29,091] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:46:05,934] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:47:54,376] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:48:40,617] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:48:40,617] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:51:41,692] INFO axes.handlers.database: AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0", path_info: "/login/"}.
+[2026-04-24 15:51:41,693] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 06:51:40.789097+00:00
+[2026-04-24 15:51:42,104] INFO axes.handlers.database: AXES: Reset 1 access attempts from database.
+[2026-04-24 15:51:42,104] INFO axes.handlers.database: AXES: Deleted 1 failed login attempts by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0", path_info: "/login/"} from database.
+[2026-04-24 15:51:42,535] INFO auth_security: Successful login user=reynier ip=192.168.1.157 suspicious=False
+[2026-04-24 15:52:20,573] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:52:25,632] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:52:25,632] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:58:44,232] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:58:55,892] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 15:59:03,575] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:00:16,735] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:00:26,274] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:00:26,275] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:00:37,048] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:00:56,445] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:01:02,621] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:01:14,331] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:01:23,440] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:01:35,502] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:01:54,171] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:01:57,767] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:02:05,984] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:02:06,010] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:04:51,551] INFO auth_security: Invalidated 3 sessions for user_id=2
+[2026-04-24 16:04:51,552] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 07:04:51.551966+00:00
+[2026-04-24 16:04:51,552] INFO axes.handlers.database: AXES: Successful logout by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0", path_info: "/logout/"}.
+[2026-04-24 16:05:42,107] INFO axes.handlers.database: AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0", path_info: "/login/"}.
+[2026-04-24 16:05:42,108] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 07:05:42.028485+00:00
+[2026-04-24 16:05:42,109] INFO axes.handlers.database: AXES: Reset 0 access attempts from database.
+[2026-04-24 16:05:42,109] INFO axes.handlers.database: AXES: Deleted 0 failed login attempts by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36 Edg/147.0.0.0", path_info: "/login/"} from database.
+[2026-04-24 16:05:42,111] INFO auth_security: Successful login user=reynier ip=192.168.1.157 suspicious=False
+[2026-04-24 16:36:36,847] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:36:50,599] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:36:57,223] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:37:03,814] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:37:38,712] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:38:14,863] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:38:21,539] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:39:47,342] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:40:38,202] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:41:05,608] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:41:05,696] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:41:05,725] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:41:14,228] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:41:25,930] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-24 16:55:26,901] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 16:55:26,902] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 07:55:26.830473+00:00
+[2026-04-24 16:55:26,903] WARNING axes.handlers.database: AXES: New login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"}. Created new record in the database.
+[2026-04-24 16:55:26,904] WARNING auth_security: Failed login username=admin ip=::1
+[2026-04-24 16:56:33,686] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 16:56:33,686] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 07:56:33.621127+00:00
+[2026-04-24 16:56:33,688] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 16:56:33,690] WARNING auth_security: Failed login username=admin ip=::1
+[2026-04-24 16:56:46,680] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 16:56:46,681] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 07:56:46.617471+00:00
+[2026-04-24 16:56:46,683] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 16:56:46,684] WARNING auth_security: Failed login username=admin ip=::1
+[2026-04-24 16:57:06,606] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 16:57:06,606] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 07:57:06.539117+00:00
+[2026-04-24 16:57:06,608] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 16:57:06,609] WARNING auth_security: Failed login username=admin ip=::1
+[2026-04-24 16:57:23,893] INFO axes.handlers.database: AXES: User login failed, running database handler for failure.
+[2026-04-24 16:57:23,894] INFO axes.handlers.database: AXES: Cleaned up 0 expired access attempts from database that were older than 2026-04-24 07:57:23.829944+00:00
+[2026-04-24 16:57:23,896] WARNING axes.handlers.database: AXES: Repeated login failure by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"}. Updated existing record in the database.
+[2026-04-24 16:57:23,897] WARNING axes.handlers.database: AXES: Locking out {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36", path_info: "/login/"} after repeated login failures.
+[2026-04-24 16:57:23,897] ERROR auth_security: User locked out username=admin ip=127.0.0.1
+[2026-04-24 16:57:23,898] WARNING auth_security: Failed login username=admin ip=::1
+[2026-04-24 16:57:51,273] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
