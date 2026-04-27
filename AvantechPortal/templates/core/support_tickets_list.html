@@ -1,0 +1,520 @@
+{% extends 'base_app.html' %}
+
+{% block title %}Avantech Portal | Support Tickets{% endblock %}
+{% block page_heading %}Support Tickets{% endblock %}
+
+{% block content %}
+<style>
+    .support-ticket-row {
+        cursor: pointer;
+    }
+
+    .support-ticket-row:hover {
+        background-color: rgba(var(--bs-success-rgb), 0.08);
+    }
+
+    .support-ticket-row:focus-visible {
+        outline: 2px solid rgba(var(--bs-success-rgb), 0.55);
+        outline-offset: -2px;
+    }
+
+    .ticket-bulk-actionbar {
+        z-index: 1050;
+        min-width: min(92vw, 720px);
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <div>
+        <h2 class="h4 mb-1">Technical Ticketing</h2>
+        <p class="text-secondary mb-0">Submit technical issues and track private updates with IT Support.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <a href="#ticketCreateFormCard" class="btn btn-success">Create Ticket</a>
+        {% if is_admin %}
+            <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#archivedTicketsModal">
+                Archived ({{ archived_ticket_count }})
+            </button>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-1">Open Tickets</p>
+                <h4 class="mb-0">{{ open_count }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-1">Important (High/Critical)</p>
+                <h4 class="mb-0 {% if important_open_count %}text-danger{% endif %}">{{ important_open_count }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-1">Resolved</p>
+                <h4 class="mb-0">{{ resolved_count }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xl-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <p class="text-secondary mb-1">Closed</p>
+                <h4 class="mb-0">{{ closed_count }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm" id="ticketCreateFormCard">
+            <div class="card-body p-4">
+                <h3 class="h5 mb-2">Create Ticket</h3>
+                <p class="small text-secondary mb-3">Use this for any software, technical, hardware, network, or access issue.</p>
+                <form method="post" action="{% url 'support_ticket_create' %}" class="d-grid gap-3">
+                    {% csrf_token %}
+                    <div>
+                        <label class="form-label" for="{{ create_form.title.id_for_label }}">Title</label>
+                        {{ create_form.title }}
+                    </div>
+                    <div>
+                        <label class="form-label" for="{{ create_form.category.id_for_label }}">Category</label>
+                        {{ create_form.category }}
+                    </div>
+                    <div>
+                        <label class="form-label" for="{{ create_form.requested_priority.id_for_label }}">Requested Priority</label>
+                        {{ create_form.requested_priority }}
+                        <div class="form-text">IT Support can further adjust priority after triage.</div>
+                    </div>
+                    <div>
+                        <label class="form-label" for="{{ create_form.description.id_for_label }}">Issue Details</label>
+                        {{ create_form.description }}
+                    </div>
+                    <button type="submit" class="btn btn-success">Submit Ticket</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body border-bottom">
+                <form method="get" class="row g-2 align-items-end">
+                    <div class="col-12 col-xl-5">
+                        <label class="form-label mb-1" for="ticket-q">Search</label>
+                        <input id="ticket-q" type="search" name="q" value="{{ ticket_query }}" class="form-control" placeholder="Ticket #, title, reporter, assignee">
+                    </div>
+                    <div class="col-6 col-xl-3">
+                        <label class="form-label mb-1" for="ticket-status">Status</label>
+                        <select id="ticket-status" name="status" class="form-select">
+                            {% for value, label in status_choices %}
+                                <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-6 col-xl-2">
+                        <label class="form-label mb-1" for="ticket-priority">Priority</label>
+                        <select id="ticket-priority" name="priority" class="form-select">
+                            {% for value, label in priority_choices %}
+                                <option value="{{ value }}" {% if priority_filter == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-12 col-xl-2 d-flex gap-2">
+                        <button type="submit" class="btn btn-outline-success w-100">Filter</button>
+                        <a href="{% url 'support_tickets_list' %}" class="btn btn-outline-secondary">Clear</a>
+                    </div>
+                </form>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+                    <small class="text-secondary">Rows per page: 10</small>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Ticket selection controls">
+                        <button type="button" id="selectAllTicketsBtn" class="btn btn-outline-success">Select All</button>
+                        <button type="button" id="unselectAllTicketsBtn" class="btn btn-outline-secondary">Unselect All</button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center" style="width: 48px;">
+                                <input type="checkbox" id="ticket-select-all" class="form-check-input" aria-label="Select all tickets on this page">
+                            </th>
+                            <th>Ticket</th>
+                            <th>Priority</th>
+                            <th>Status</th>
+                            <th>Reporter</th>
+                            <th>Assigned IT</th>
+                            <th>Updated</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ticket in ticket_page %}
+                            <tr
+                                class="support-ticket-row"
+                                data-ticket-url="{% url 'support_ticket_detail' ticket.id %}"
+                                tabindex="0"
+                                role="button"
+                                aria-label="Open {{ ticket.ticket_number }} conversation"
+                            >
+                                <td class="text-center">
+                                    <input
+                                        type="checkbox"
+                                        class="form-check-input js-ticket-select"
+                                        value="{{ ticket.id }}"
+                                        aria-label="Select {{ ticket.ticket_number }}"
+                                    >
+                                </td>
+                                <td>
+                                    <div class="fw-semibold">{{ ticket.ticket_number }}</div>
+                                    <div class="small text-secondary">{{ ticket.title }}</div>
+                                </td>
+                                <td>
+                                    {% if ticket.effective_priority == 'critical' %}
+                                        <span class="badge bg-danger">Critical</span>
+                                    {% elif ticket.effective_priority == 'high' %}
+                                        <span class="badge bg-warning text-dark">High</span>
+                                    {% elif ticket.effective_priority == 'medium' %}
+                                        <span class="badge bg-info text-dark">Medium</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Low</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if ticket.status == 'open' %}
+                                        <span class="badge bg-primary">Open</span>
+                                    {% elif ticket.status == 'in_progress' %}
+                                        <span class="badge bg-info text-dark">In Progress</span>
+                                    {% elif ticket.status == 'waiting_user' %}
+                                        <span class="badge bg-warning text-dark">Waiting User</span>
+                                    {% elif ticket.status == 'resolved' %}
+                                        <span class="badge bg-success">Resolved</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Closed</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ ticket.created_by.get_full_name|default:ticket.created_by.username }}</td>
+                                <td>
+                                    {% if ticket.assigned_to %}
+                                        {{ ticket.assigned_to.get_full_name|default:ticket.assigned_to.username }}
+                                    {% else %}
+                                        <span class="text-secondary">Unassigned</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ ticket.updated_at|date:'Y-m-d H:i' }}</td>
+                                <td class="text-end">
+                                    <a href="{% url 'support_ticket_detail' ticket.id %}" class="btn btn-sm btn-outline-success">Open</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="8" class="text-center py-4 text-secondary">No tickets found for this filter.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if ticket_page.paginator.num_pages > 1 %}
+                <div class="card-footer bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <small class="text-secondary">Page {{ ticket_page.number }} of {{ ticket_page.paginator.num_pages }}</small>
+                    <div class="btn-group btn-group-sm flex-wrap" role="group" aria-label="Support ticket pagination">
+                        {% if ticket_page.has_previous %}
+                            <a class="btn btn-sm btn-outline-success" href="?q={{ ticket_query|urlencode }}&status={{ status_filter|urlencode }}&priority={{ priority_filter|urlencode }}&page={{ ticket_page.previous_page_number }}">Previous</a>
+                        {% else %}
+                            <button class="btn btn-sm btn-outline-secondary" disabled>Previous</button>
+                        {% endif %}
+                        {% for page_number in ticket_page.paginator.page_range %}
+                            {% if page_number == ticket_page.number %}
+                                <button class="btn btn-sm btn-success" disabled>{{ page_number }}</button>
+                            {% else %}
+                                <a class="btn btn-sm btn-outline-success" href="?q={{ ticket_query|urlencode }}&status={{ status_filter|urlencode }}&priority={{ priority_filter|urlencode }}&page={{ page_number }}">{{ page_number }}</a>
+                            {% endif %}
+                        {% endfor %}
+                        {% if ticket_page.has_next %}
+                            <a class="btn btn-sm btn-outline-success" href="?q={{ ticket_query|urlencode }}&status={{ status_filter|urlencode }}&priority={{ priority_filter|urlencode }}&page={{ ticket_page.next_page_number }}">Next</a>
+                        {% else %}
+                            <button class="btn btn-sm btn-outline-secondary" disabled>Next</button>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div id="ticketBulkActionBar" class="ticket-bulk-actionbar position-fixed bottom-0 start-50 translate-middle-x mb-4 d-none">
+    <div class="card border-0 shadow-lg">
+        <div class="card-body py-2 px-3 d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div class="small fw-semibold">
+                <span id="selectedTicketCount">0</span> ticket(s) selected
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                {% if is_admin %}
+                    <button type="button" class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#archiveConfirmModal">
+                        Archive Selected
+                    </button>
+                    <button type="button" id="bulkDeleteButton" class="btn btn-sm btn-outline-danger">Delete Selected</button>
+                {% else %}
+                    <span class="small text-secondary">Only admin can archive or delete selected tickets.</span>
+                {% endif %}
+                <button type="button" id="clearSelectedTicketsBtn" class="btn btn-sm btn-outline-secondary">Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="bulkArchiveForm" method="post" action="{% url 'support_tickets_bulk_archive' %}" class="d-none">
+    {% csrf_token %}
+    <div id="bulkArchiveInputs"></div>
+</form>
+
+<form id="bulkDeleteForm" method="post" action="{% url 'support_tickets_bulk_delete' %}" class="d-none">
+    {% csrf_token %}
+    <div id="bulkDeleteInputs"></div>
+</form>
+
+{% if is_admin %}
+    <div class="modal fade" id="archiveConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Archive Selected Tickets</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-2">Move <strong id="archiveSelectedCount">0</strong> selected ticket(s) to archive?</p>
+                    <p class="text-secondary small mb-0">Archived tickets are hidden from active ticket list but can still be viewed in Archived modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="archiveConfirmButton" class="btn btn-warning">Confirm Archive</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="archivedTicketsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Archived Tickets</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ticket</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                    <th>Reporter</th>
+                                    <th>Assigned IT</th>
+                                    <th>Archived</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for archived_ticket in archived_tickets_preview %}
+                                    <tr>
+                                        <td>
+                                            <div class="fw-semibold">{{ archived_ticket.ticket_number }}</div>
+                                            <div class="small text-secondary">{{ archived_ticket.title }}</div>
+                                        </td>
+                                        <td>{{ archived_ticket.get_status_display }}</td>
+                                        <td>{{ archived_ticket.effective_priority|title }}</td>
+                                        <td>{{ archived_ticket.created_by.get_full_name|default:archived_ticket.created_by.username }}</td>
+                                        <td>
+                                            {% if archived_ticket.assigned_to %}
+                                                {{ archived_ticket.assigned_to.get_full_name|default:archived_ticket.assigned_to.username }}
+                                            {% else %}
+                                                <span class="text-secondary">Unassigned</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ archived_ticket.archived_at|date:'Y-m-d H:i' }}</td>
+                                        <td class="text-end">
+                                            <a href="{% url 'support_ticket_detail' archived_ticket.id %}" class="btn btn-sm btn-outline-success">Open</a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="7" class="text-center py-4 text-secondary">No archived tickets yet.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <small class="text-secondary">Showing latest {{ archived_tickets_preview|length }} archived ticket(s).</small>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var rows = document.querySelectorAll('tr.support-ticket-row[data-ticket-url]');
+        var rowCheckboxes = Array.prototype.slice.call(document.querySelectorAll('.js-ticket-select'));
+        var selectAllCheckbox = document.getElementById('ticket-select-all');
+        var selectAllBtn = document.getElementById('selectAllTicketsBtn');
+        var unselectAllBtn = document.getElementById('unselectAllTicketsBtn');
+        var clearSelectedBtn = document.getElementById('clearSelectedTicketsBtn');
+        var actionBar = document.getElementById('ticketBulkActionBar');
+        var selectedCountLabel = document.getElementById('selectedTicketCount');
+        var archiveSelectedCount = document.getElementById('archiveSelectedCount');
+        var archiveForm = document.getElementById('bulkArchiveForm');
+        var deleteForm = document.getElementById('bulkDeleteForm');
+        var archiveInputs = document.getElementById('bulkArchiveInputs');
+        var deleteInputs = document.getElementById('bulkDeleteInputs');
+        var archiveConfirmButton = document.getElementById('archiveConfirmButton');
+        var bulkDeleteButton = document.getElementById('bulkDeleteButton');
+
+        function isInteractiveTarget(target) {
+            return !!target.closest('a, button, input, select, textarea, label, [role="button"]');
+        }
+
+        function getSelectedIds() {
+            return rowCheckboxes.filter(function (checkbox) {
+                return checkbox.checked;
+            }).map(function (checkbox) {
+                return checkbox.value;
+            });
+        }
+
+        function writeHiddenTicketInputs(container, selectedIds) {
+            if (!container) {
+                return;
+            }
+            container.innerHTML = '';
+            selectedIds.forEach(function (ticketId) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'ticket_ids';
+                input.value = ticketId;
+                container.appendChild(input);
+            });
+        }
+
+        function updateSelectAllCheckbox(selectedCount) {
+            if (!selectAllCheckbox) {
+                return;
+            }
+            if (!rowCheckboxes.length) {
+                selectAllCheckbox.checked = false;
+                selectAllCheckbox.indeterminate = false;
+                return;
+            }
+            selectAllCheckbox.checked = selectedCount === rowCheckboxes.length;
+            selectAllCheckbox.indeterminate = selectedCount > 0 && selectedCount < rowCheckboxes.length;
+        }
+
+        function syncSelectionUi() {
+            var selectedIds = getSelectedIds();
+            var selectedCount = selectedIds.length;
+
+            if (selectedCountLabel) {
+                selectedCountLabel.textContent = String(selectedCount);
+            }
+            if (archiveSelectedCount) {
+                archiveSelectedCount.textContent = String(selectedCount);
+            }
+            if (actionBar) {
+                actionBar.classList.toggle('d-none', selectedCount === 0);
+            }
+
+            updateSelectAllCheckbox(selectedCount);
+            writeHiddenTicketInputs(archiveInputs, selectedIds);
+            writeHiddenTicketInputs(deleteInputs, selectedIds);
+        }
+
+        function setAllSelection(isChecked) {
+            rowCheckboxes.forEach(function (checkbox) {
+                checkbox.checked = isChecked;
+            });
+            syncSelectionUi();
+        }
+
+        rows.forEach(function (row) {
+            row.addEventListener('click', function (event) {
+                if (isInteractiveTarget(event.target)) {
+                    return;
+                }
+                var url = row.getAttribute('data-ticket-url');
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+
+            row.addEventListener('keydown', function (event) {
+                if (event.key !== 'Enter' && event.key !== ' ') {
+                    return;
+                }
+                event.preventDefault();
+                var url = row.getAttribute('data-ticket-url');
+                if (url) {
+                    window.location.href = url;
+                }
+            });
+        });
+
+        rowCheckboxes.forEach(function (checkbox) {
+            checkbox.addEventListener('change', syncSelectionUi);
+        });
+
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', function () {
+                setAllSelection(selectAllCheckbox.checked);
+            });
+        }
+        if (selectAllBtn) {
+            selectAllBtn.addEventListener('click', function () {
+                setAllSelection(true);
+            });
+        }
+        if (unselectAllBtn) {
+            unselectAllBtn.addEventListener('click', function () {
+                setAllSelection(false);
+            });
+        }
+        if (clearSelectedBtn) {
+            clearSelectedBtn.addEventListener('click', function () {
+                setAllSelection(false);
+            });
+        }
+        if (archiveConfirmButton && archiveForm) {
+            archiveConfirmButton.addEventListener('click', function () {
+                if (!getSelectedIds().length) {
+                    return;
+                }
+                archiveForm.submit();
+            });
+        }
+        if (bulkDeleteButton && deleteForm) {
+            bulkDeleteButton.addEventListener('click', function () {
+                var selectedCount = getSelectedIds().length;
+                if (!selectedCount) {
+                    return;
+                }
+                if (window.confirm('Delete ' + selectedCount + ' selected ticket(s)? This cannot be undone.')) {
+                    deleteForm.submit();
+                }
+            });
+        }
+
+        syncSelectionUi();
+    });
+</script>
+{% endblock %}

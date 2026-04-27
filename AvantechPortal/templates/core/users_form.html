@@ -74,7 +74,7 @@
                                     type="search"
                                     id="userPermissionSearch"
                                     class="form-control"
-                                    placeholder="Find permission (e.g., view_assetitem)"
+                                    placeholder="Find feature access (e.g., Asset Inventory, View asset items)"
                                     autocomplete="off"
                                 >
                                 <button type="button" class="btn btn-outline-secondary d-none" id="userPermissionSearchClear">Clear</button>
@@ -99,7 +99,7 @@
                                             <table class="table table-sm align-middle mb-0">
                                                 <thead class="table-light">
                                                     <tr>
-                                                        <th>Permission</th>
+                                                        <th>Feature Access</th>
                                                         <th class="text-center" style="width: 90px;">Select</th>
                                                     </tr>
                                                 </thead>
@@ -117,10 +117,10 @@
                                         </div>
                                     </details>
                                 {% empty %}
-                                    <div class="text-secondary text-center py-2">No permissions available.</div>
+                                    <div class="text-secondary text-center py-2">No feature access available.</div>
                                 {% endfor %}
                             </div>
-                            <div class="small text-secondary mt-2 d-none" id="userPermissionSearchEmpty">No permissions matched your search.</div>
+                            <div class="small text-secondary mt-2 d-none" id="userPermissionSearchEmpty">No feature access matched your search.</div>
                             {% if field.help_text %}
                                 <div class="form-text">{{ field.help_text }}</div>
                             {% endif %}
@@ -154,9 +154,9 @@
 <div class="modal fade" id="rolePermissionPreviewModal" tabindex="-1" aria-labelledby="rolePermissionPreviewModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content border-0 shadow">
-            {% include 'core/includes/modal_header.html' with modal_title='Role Permissions Preview' modal_title_id='rolePermissionPreviewModalLabel' %}
+            {% include 'core/includes/modal_header.html' with modal_title='Role Feature Access Preview' modal_title_id='rolePermissionPreviewModalLabel' %}
             <div class="modal-body" id="rolePermissionPreviewBody">
-                <div class="text-secondary">Select a role row to view permissions.</div>
+                <div class="text-secondary">Select a role row to view feature access.</div>
             </div>
         </div>
     </div>
@@ -374,7 +374,7 @@
 
             const groupedPermissions = rolePermissionsData[String(roleId)] || [];
             if (!groupedPermissions.length) {
-                rolePreviewBody.innerHTML = `<p class="text-secondary mb-0">${roleName} has no assigned permissions.</p>`;
+                rolePreviewBody.innerHTML = `<p class="text-secondary mb-0">${roleName} has no feature access assigned.</p>`;
                 return;
             }
 

@@ -126,6 +126,7 @@ from .models import (
 	UserProfile,
 )
 from .notifications import create_notification
+from .permission_catalog import build_permission_preview_groups, format_permission_summary
 
 
 EMAIL_VERIFICATION_CODE_TTL = 10 * 60
@@ -985,6 +986,20 @@ def _mark_company_account_unlocked(request, account_id):
 	payload[str(account_id)] = timezone.now().timestamp() + INTERNET_ACCOUNT_UNLOCK_TTL_SECONDS
 	request.session[INTERNET_ACCOUNT_UNLOCK_SESSION_KEY] = payload
 	request.session.modified = True
+
+
+def _mark_company_account_locked(request, account_id):
+	payload = request.session.get(INTERNET_ACCOUNT_UNLOCK_SESSION_KEY) or {}
+	if not isinstance(payload, dict):
+		request.session[INTERNET_ACCOUNT_UNLOCK_SESSION_KEY] = {}
+		request.session.modified = True
+		return
+
+	account_key = str(account_id)
+	if account_key in payload:
+		payload.pop(account_key, None)
+		request.session[INTERNET_ACCOUNT_UNLOCK_SESSION_KEY] = payload
+		request.session.modified = True
 
 
 def _can_access_all_clients(user):
@@ -2906,15 +2921,15 @@ def users_list(request):
 		group_names = [group.name for group in managed_user.groups.all()]
 		direct_permission_names = sorted(
 			{
-				f"{permission.content_type.app_label}: {permission.name}"
-				for permission in managed_user.user_permissions.all()
+				format_permission_summary(permission)
+				for permission in managed_user.user_permissions.select_related('content_type').all()
 			}
 		)
 		group_permission_names = sorted(
 			{
-				f"{permission.content_type.app_label}: {permission.name}"
+				format_permission_summary(permission)
 				for group in managed_user.groups.all()
-				for permission in group.permissions.all()
+				for permission in group.permissions.select_related('content_type').all()
 			}
 		)
 		all_events = login_events_by_user_id.get(managed_user.id, [])
@@ -3017,20 +3032,7 @@ def users_create(request):
 	role_permissions_grouped_map = {}
 	available_roles = Group.objects.prefetch_related('permissions').order_by('name')
 	for role in available_roles:
-		sorted_permissions = sorted(
-			role.permissions.all(),
-			key=lambda permission: (permission.content_type.app_label, permission.name),
-		)
-		grouped_permissions = {}
-		for permission in sorted_permissions:
-			app_label_key = permission.content_type.app_label
-			if app_label_key not in grouped_permissions:
-				grouped_permissions[app_label_key] = {
-					'app_label': app_label_key.replace('_', ' ').title(),
-					'items': [],
-				}
-			grouped_permissions[app_label_key]['items'].append(permission.name)
-		role_permissions_grouped_map[str(role.id)] = list(grouped_permissions.values())
+		role_permissions_grouped_map[str(role.id)] = build_permission_preview_groups(role.permissions.all())
 
 	if request.method == 'POST':
 		form = StaffUserCreationForm(request.POST)
@@ -3062,20 +3064,7 @@ def users_update(request, user_id):
 	role_permissions_grouped_map = {}
 	available_roles = Group.objects.prefetch_related('permissions').order_by('name')
 	for role in available_roles:
-		sorted_permissions = sorted(
-			role.permissions.all(),
-			key=lambda permission: (permission.content_type.app_label, permission.name),
-		)
-		grouped_permissions = {}
-		for permission in sorted_permissions:
-			app_label_key = permission.content_type.app_label
-			if app_label_key not in grouped_permissions:
-				grouped_permissions[app_label_key] = {
-					'app_label': app_label_key.replace('_', ' ').title(),
-					'items': [],
-				}
-			grouped_permissions[app_label_key]['items'].append(permission.name)
-		role_permissions_grouped_map[str(role.id)] = list(grouped_permissions.values())
+		role_permissions_grouped_map[str(role.id)] = build_permission_preview_groups(role.permissions.all())
 
 	managed_user = get_object_or_404(User, pk=user_id)
 
@@ -5657,17 +5646,22 @@ def assets_company_account_reveal(request, account_id):
 	if not can_manage and account.submitted_by_id != request.user.id:
 		return _permission_denied_response(request, 'You do not have permission to view this credential.')
 
-	unlock_form = CompanyInternetAccountUnlockForm(request.POST, user=request.user)
-	if unlock_form.is_valid():
-		_mark_company_account_unlocked(request, account.id)
-		account.last_unlocked_at = timezone.now()
-		account.save(update_fields=['last_unlocked_at'])
-		messages.success(request, f'Credential for "{account.platform_name}" is now unlocked for viewing.')
+	action_type = (request.POST.get('credential_action') or 'unlock').strip().lower()
+	if action_type == 'lock':
+		_mark_company_account_locked(request, account.id)
+		messages.success(request, f'Credential for "{account.platform_name}" is now masked.')
 	else:
-		for _, errors in unlock_form.errors.items():
-			if errors:
-				messages.error(request, errors[0])
-				break
+		unlock_form = CompanyInternetAccountUnlockForm(request.POST, user=request.user)
+		if unlock_form.is_valid():
+			_mark_company_account_unlocked(request, account.id)
+			account.last_unlocked_at = timezone.now()
+			account.save(update_fields=['last_unlocked_at'])
+			messages.success(request, f'Credential for "{account.platform_name}" is now unlocked for viewing.')
+		else:
+			for _, errors in unlock_form.errors.items():
+				if errors:
+					messages.error(request, errors[0])
+					break
 
 	next_url = (request.POST.get('next') or '').strip()
 	if next_url and url_has_allowed_host_and_scheme(next_url, {request.get_host()}):
@@ -6330,22 +6324,7 @@ def roles_list(request):
 		for member in role.user_set.all():
 			if member.id not in role_member_profiles_map:
 				role_member_profiles_map[member.id] = getattr(member, 'profile', None)
-
-		sorted_permissions = sorted(
-			role.permissions.all(),
-			key=lambda permission: (permission.content_type.app_label, permission.name),
-		)
-		grouped_permissions = {}
-		for permission in sorted_permissions:
-			app_label_key = permission.content_type.app_label
-			if app_label_key not in grouped_permissions:
-				grouped_permissions[app_label_key] = {
-					'app_label': app_label_key.replace('_', ' ').title(),
-					'items': [],
-				}
-			grouped_permissions[app_label_key]['items'].append(permission.name)
-
-		role_permissions_grouped_map[role.id] = list(grouped_permissions.values())
+		role_permissions_grouped_map[role.id] = build_permission_preview_groups(role.permissions.all())
 
 	return render(
 		request,

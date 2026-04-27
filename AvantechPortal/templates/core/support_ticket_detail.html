@@ -1,0 +1,156 @@
+{% extends 'base_app.html' %}
+
+{% block title %}Avantech Portal | {{ ticket.ticket_number }}{% endblock %}
+{% block page_heading %}Support Ticket{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <div>
+        <h2 class="h4 mb-1">{{ ticket.ticket_number }}</h2>
+        <p class="text-secondary mb-0">{{ ticket.title }}</p>
+    </div>
+    <a href="{% url 'support_tickets_list' %}" class="btn btn-outline-secondary">Back to Tickets</a>
+</div>
+
+{% if ticket.is_archived %}
+    <div class="alert alert-secondary">
+        This ticket is archived and read-only.
+    </div>
+{% endif %}
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm mb-3">
+            <div class="card-body p-4">
+                <h3 class="h6 mb-3">Ticket Details</h3>
+                <div class="small text-secondary mb-2">Category</div>
+                <div class="mb-3">{{ ticket.get_category_display }}</div>
+
+                <div class="small text-secondary mb-2">Status</div>
+                <div class="mb-3">
+                    {% if ticket.status == 'open' %}
+                        <span class="badge bg-primary">Open</span>
+                    {% elif ticket.status == 'in_progress' %}
+                        <span class="badge bg-info text-dark">In Progress</span>
+                    {% elif ticket.status == 'waiting_user' %}
+                        <span class="badge bg-warning text-dark">Waiting User</span>
+                    {% elif ticket.status == 'resolved' %}
+                        <span class="badge bg-success">Resolved</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Closed</span>
+                    {% endif %}
+                </div>
+
+                <div class="small text-secondary mb-2">Priority</div>
+                <div class="mb-3">
+                    <div class="small mb-1">Requested by User: <strong>{{ ticket.get_requested_priority_display }}</strong></div>
+                    <div class="small mb-1">Set by IT: <strong>{{ ticket.get_support_priority_display|default:'Not set' }}</strong></div>
+                    <div>
+                        {% if ticket.effective_priority == 'critical' %}
+                            <span class="badge bg-danger">Effective Priority: Critical</span>
+                        {% elif ticket.effective_priority == 'high' %}
+                            <span class="badge bg-warning text-dark">Effective Priority: High</span>
+                        {% elif ticket.effective_priority == 'medium' %}
+                            <span class="badge bg-info text-dark">Effective Priority: Medium</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Effective Priority: Low</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="small text-secondary mb-2">Reporter</div>
+                <div class="mb-3">{{ ticket.created_by.get_full_name|default:ticket.created_by.username }}</div>
+
+                <div class="small text-secondary mb-2">Assigned IT Support</div>
+                <div class="mb-3">
+                    {% if ticket.assigned_to %}
+                        {{ ticket.assigned_to.get_full_name|default:ticket.assigned_to.username }}
+                    {% else %}
+                        <span class="text-secondary">Unassigned</span>
+                    {% endif %}
+                </div>
+
+                <div class="small text-secondary mb-2">Created</div>
+                <div class="mb-3">{{ ticket.created_at|date:'Y-m-d H:i' }}</div>
+
+                <div class="small text-secondary mb-2">Description</div>
+                <div class="border rounded p-2 bg-light-subtle small" style="white-space: pre-wrap;">{{ ticket.description }}</div>
+            </div>
+        </div>
+
+        {% if can_update_requested_priority %}
+            <div class="card border-0 shadow-sm mb-3">
+                <div class="card-body p-4">
+                    <h3 class="h6 mb-3">Update Requested Priority</h3>
+                    <form method="post" action="{% url 'support_ticket_update_requested_priority' ticket.id %}" class="d-grid gap-2">
+                        {% csrf_token %}
+                        {{ requester_priority_form.requested_priority }}
+                        <button type="submit" class="btn btn-sm btn-outline-primary">Save Requested Priority</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if can_update_support %}
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h3 class="h6 mb-3">IT Support Controls</h3>
+                    <form method="post" action="{% url 'support_ticket_update_support' ticket.id %}" class="d-grid gap-2">
+                        {% csrf_token %}
+                        <div>
+                            <label class="form-label small mb-1">Status</label>
+                            {{ support_update_form.status }}
+                        </div>
+                        <div>
+                            <label class="form-label small mb-1">IT Priority Override</label>
+                            {{ support_update_form.support_priority }}
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-success">Save Support Update</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white">
+                <h3 class="h6 mb-1">Private Conversation</h3>
+                <p class="small text-secondary mb-0">Visible only to the requester and assigned IT support.</p>
+            </div>
+            <div class="card-body p-3 p-md-4">
+                <div class="d-grid gap-3 mb-4">
+                    {% if messages_list %}
+                        {% for entry in messages_list %}
+                            <div class="d-flex {% if entry.sender_id == request.user.id %}justify-content-end{% else %}justify-content-start{% endif %}">
+                                <div class="border rounded p-3 {% if entry.sender_id == request.user.id %}bg-success-subtle border-success-subtle{% else %}bg-light-subtle{% endif %}" style="max-width: 85%;">
+                                    <div class="small text-secondary mb-1">
+                                        {{ entry.sender.get_full_name|default:entry.sender.username|default:'System' }} - {{ entry.created_at|date:'Y-m-d H:i' }}
+                                    </div>
+                                    <div style="white-space: pre-wrap;">{{ entry.message }}</div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-secondary small">No conversation yet. Start with a message below.</div>
+                    {% endif %}
+                </div>
+
+                {% if can_chat %}
+                    <form method="post" action="{% url 'support_ticket_add_message' ticket.id %}" class="d-grid gap-2">
+                        {% csrf_token %}
+                        {{ message_form.message }}
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-success">Send Reply</button>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="alert alert-warning mb-0">
+                        You can view this ticket, but only the requester and assigned IT support can post messages.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -197,6 +197,115 @@ class Notification(models.Model):
 		return f'Notification<{self.user.username}:{self.title}>'
 
 
+class SupportTicket(models.Model):
+	CATEGORY_CHOICES = [
+		('technical', 'Technical Issue'),
+		('software', 'Software/Application'),
+		('hardware', 'Hardware/Device'),
+		('network', 'Network/Internet'),
+		('access', 'Access/Login/Permission'),
+		('other', 'Other Tech Concern'),
+	]
+
+	PRIORITY_CHOICES = [
+		('low', 'Low'),
+		('medium', 'Medium'),
+		('high', 'High'),
+		('critical', 'Critical'),
+	]
+
+	STATUS_CHOICES = [
+		('open', 'Open'),
+		('in_progress', 'In Progress'),
+		('waiting_user', 'Waiting for User'),
+		('resolved', 'Resolved'),
+		('closed', 'Closed'),
+	]
+
+	ticket_number = models.CharField(max_length=32, unique=True, blank=True, db_index=True)
+	title = models.CharField(max_length=180)
+	category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='technical')
+	description = models.TextField()
+	created_by = models.ForeignKey(
+		settings.AUTH_USER_MODEL,
+		on_delete=models.CASCADE,
+		related_name='support_tickets_created',
+	)
+	assigned_to = models.ForeignKey(
+		settings.AUTH_USER_MODEL,
+		on_delete=models.SET_NULL,
+		null=True,
+		blank=True,
+		related_name='support_tickets_assigned',
+	)
+	status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='open', db_index=True)
+	requested_priority = models.CharField(max_length=12, choices=PRIORITY_CHOICES, default='medium', db_index=True)
+	support_priority = models.CharField(max_length=12, choices=PRIORITY_CHOICES, blank=True, null=True, db_index=True)
+	assigned_at = models.DateTimeField(blank=True, null=True)
+	last_message_at = models.DateTimeField(blank=True, null=True)
+	last_activity_at = models.DateTimeField(auto_now=True)
+	closed_at = models.DateTimeField(blank=True, null=True)
+	is_archived = models.BooleanField(default=False, db_index=True)
+	archived_at = models.DateTimeField(blank=True, null=True)
+	archived_by = models.ForeignKey(
+		settings.AUTH_USER_MODEL,
+		on_delete=models.SET_NULL,
+		null=True,
+		blank=True,
+		related_name='support_tickets_archived',
+	)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+
+	class Meta:
+		ordering = ['-created_at']
+		permissions = [
+			('can_manage_supportticket', 'Can manage support tickets'),
+		]
+
+	def __str__(self):
+		return f'SupportTicket<{self.ticket_number or self.pk}:{self.title}>'
+
+	@property
+	def effective_priority(self):
+		return (self.support_priority or self.requested_priority or 'medium').strip().lower()
+
+	@property
+	def is_important_priority(self):
+		return self.effective_priority in {'high', 'critical'}
+
+	@property
+	def is_open_status(self):
+		return (not self.is_archived) and self.status in {'open', 'in_progress', 'waiting_user'}
+
+	def save(self, *args, **kwargs):
+		creating = self.pk is None
+		super().save(*args, **kwargs)
+		if creating and not self.ticket_number:
+			date_label = timezone.localtime(timezone.now()).strftime('%Y%m%d')
+			self.ticket_number = f'TCK-{date_label}-{self.pk:05d}'
+			super().save(update_fields=['ticket_number', 'updated_at'])
+
+
+class SupportTicketMessage(models.Model):
+	ticket = models.ForeignKey(SupportTicket, on_delete=models.CASCADE, related_name='messages')
+	sender = models.ForeignKey(
+		settings.AUTH_USER_MODEL,
+		on_delete=models.SET_NULL,
+		null=True,
+		blank=True,
+		related_name='support_ticket_messages_sent',
+	)
+	message = models.TextField()
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		ordering = ['created_at']
+
+	def __str__(self):
+		return f'SupportTicketMessage<{self.ticket_id}:{self.sender_id}>'
+
+
 class Client(models.Model):
 	CLIENT_TYPE_CHOICES = [
 		('new', 'New Client'),

@@ -9,6 +9,16 @@ from .system_views import (
     system_backup_run_now,
     system_hub,
 )
+from .ticketing_views import (
+    support_ticket_add_message,
+    support_ticket_create,
+    support_ticket_detail,
+    support_ticket_update_requested_priority,
+    support_ticket_update_support,
+    support_tickets_bulk_archive,
+    support_tickets_bulk_delete,
+    support_tickets_list,
+)
 
 from .views import (
     accountability_create,
@@ -176,6 +186,22 @@ urlpatterns = [
     path('system/backups/<int:backup_id>/download/', system_backup_download, name='system_backup_download'),
     path('profile/', profile_page, name='profile_page'),
     path('support/lockouts/', support_lockout_center, name='support_lockout_center'),
+    path('support/tickets/', support_tickets_list, name='support_tickets_list'),
+    path('support/tickets/create/', support_ticket_create, name='support_ticket_create'),
+    path('support/tickets/<int:ticket_id>/', support_ticket_detail, name='support_ticket_detail'),
+    path('support/tickets/<int:ticket_id>/message/', support_ticket_add_message, name='support_ticket_add_message'),
+    path('support/tickets/bulk/archive/', support_tickets_bulk_archive, name='support_tickets_bulk_archive'),
+    path('support/tickets/bulk/delete/', support_tickets_bulk_delete, name='support_tickets_bulk_delete'),
+    path(
+        'support/tickets/<int:ticket_id>/priority/requested/',
+        support_ticket_update_requested_priority,
+        name='support_ticket_update_requested_priority',
+    ),
+    path(
+        'support/tickets/<int:ticket_id>/support-update/',
+        support_ticket_update_support,
+        name='support_ticket_update_support',
+    ),
     path('users/', users_list, name='users_list'),
     path('clients/', clients_list, name='clients_list'),
     path('fund-requests/', fund_requests_list, name='fund_requests_list'),

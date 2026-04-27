@@ -58,7 +58,10 @@ def system_hub(request):
     if not _can_manage_system_backups(request.user):
         return _permission_denied_response(request, 'You do not have permission to manage system backups.')
 
-    run_due_system_backups()
+    try:
+        run_due_system_backups()
+    except Exception as exc:
+        messages.warning(request, f'Automatic backup run skipped due to an error: {exc}')
     schedule = get_or_create_primary_schedule(updated_by=request.user)
 
     if request.method == 'POST':

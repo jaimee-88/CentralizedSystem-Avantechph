@@ -24,7 +24,7 @@
                 </div>
                 <div class="col-12">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <label class="form-label fw-semibold mb-0">Permissions</label>
+                        <label class="form-label fw-semibold mb-0">{{ form.permissions.label }}</label>
                         <label class="form-check-label small d-inline-flex align-items-center gap-1 mb-0">
                             <input type="checkbox" class="form-check-input js-toggle-all" data-target-field="permissions" id="toggleAllRolePermissions">
                             <span>Select all / Unselect all</span>
@@ -41,7 +41,7 @@
                                     <table class="table table-sm align-middle mb-0">
                                         <thead class="table-light">
                                             <tr>
-                                                <th>Permission</th>
+                                                <th>Feature Access</th>
                                                 <th class="text-center" style="width: 90px;">Select</th>
                                             </tr>
                                         </thead>
@@ -59,11 +59,14 @@
                                 </div>
                             </details>
                         {% empty %}
-                            <div class="text-secondary text-center py-2">No permissions available.</div>
+                            <div class="text-secondary text-center py-2">No feature access available.</div>
                         {% endfor %}
                     </div>
                     {% if form.permissions.errors %}
                         <div class="text-danger small mt-1">{{ form.permissions.errors|striptags }}</div>
+                    {% endif %}
+                    {% if form.permissions.help_text %}
+                        <div class="form-text mt-1">{{ form.permissions.help_text }}</div>
                     {% endif %}
                 </div>
             </div>

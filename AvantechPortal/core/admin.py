@@ -27,6 +27,8 @@ from .models import (
 	LiquidationTemplate,
 	LoginEvent,
 	Notification,
+	SupportTicket,
+	SupportTicketMessage,
 	PatchNote,
 	PatchNoteAttachment,
 	PatchNoteComment,
@@ -59,6 +61,44 @@ class NotificationAdmin(admin.ModelAdmin):
 	list_display = ('user', 'title', 'is_read', 'created_at', 'read_at')
 	list_filter = ('is_read', 'created_at')
 	search_fields = ('user__username', 'user__email', 'title', 'message')
+
+
+@admin.register(SupportTicket)
+class SupportTicketAdmin(admin.ModelAdmin):
+	list_display = (
+		'ticket_number',
+		'title',
+		'category',
+		'status',
+		'is_archived',
+		'requested_priority',
+		'support_priority',
+		'created_by',
+		'assigned_to',
+		'created_at',
+		'last_message_at',
+		'archived_at',
+		'archived_by',
+	)
+	list_filter = ('category', 'status', 'is_archived', 'requested_priority', 'support_priority', 'created_at', 'archived_at')
+	search_fields = ('ticket_number', 'title', 'description', 'created_by__username', 'assigned_to__username')
+	readonly_fields = (
+		'ticket_number',
+		'created_at',
+		'updated_at',
+		'assigned_at',
+		'last_message_at',
+		'last_activity_at',
+		'closed_at',
+		'archived_at',
+	)
+
+
+@admin.register(SupportTicketMessage)
+class SupportTicketMessageAdmin(admin.ModelAdmin):
+	list_display = ('ticket', 'sender', 'created_at')
+	list_filter = ('created_at',)
+	search_fields = ('ticket__ticket_number', 'message', 'sender__username', 'sender__email')
 
 
 @admin.register(DevelopmentFeedback)

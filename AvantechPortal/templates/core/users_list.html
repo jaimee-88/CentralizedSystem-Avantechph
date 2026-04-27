@@ -321,18 +321,18 @@
 
                 {% if request.user.is_superuser %}
                     <div class="mt-4">
-                        <h4 class="h6 mb-2">Assigned Permissions (Admin Only)</h4>
+                        <h4 class="h6 mb-2">Assigned Feature Access (Admin Only)</h4>
                         <div class="row g-3">
                             <div class="col-12 col-md-6">
                                 <div class="profile-detail-card">
-                                    <span class="profile-detail-label">Direct User Permissions</span>
-                                    <div class="small" id="userProfileDirectPermissions">No direct permissions.</div>
+                                    <span class="profile-detail-label">Direct User Feature Access</span>
+                                    <div class="small" id="userProfileDirectPermissions">No direct feature access.</div>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6">
                                 <div class="profile-detail-card">
-                                    <span class="profile-detail-label">Permissions From Roles</span>
-                                    <div class="small" id="userProfileGroupPermissions">No role-based permissions.</div>
+                                    <span class="profile-detail-label">Feature Access From Roles</span>
+                                    <div class="small" id="userProfileGroupPermissions">No role-based feature access.</div>
                                 </div>
                             </div>
                         </div>
@@ -448,8 +448,8 @@
                     fields.failedEvents.textContent = (userData.account_stats && userData.account_stats.failed_events) || 0;
                     fields.lastSuccess.textContent = (userData.account_stats && userData.account_stats.last_successful_login) || '-';
                     renderActivity((userData.recent_activity || []).slice(0, 3));
-                    renderPermissionList(fields.directPermissions, userData.direct_permissions || [], 'No direct permissions.');
-                    renderPermissionList(fields.groupPermissions, userData.group_permissions || [], 'No role-based permissions.');
+                    renderPermissionList(fields.directPermissions, userData.direct_permissions || [], 'No direct feature access.');
+                    renderPermissionList(fields.groupPermissions, userData.group_permissions || [], 'No role-based feature access.');
                     profileModalInstance.show();
                 });
 

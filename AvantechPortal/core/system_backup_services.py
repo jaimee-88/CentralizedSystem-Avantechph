@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import logging
 import tempfile
 import zipfile
 from pathlib import Path
@@ -21,6 +22,8 @@ SCOPE_DIRECTORY_MAP = {
     'static': 'static',
     'templates': 'templates',
 }
+
+logger = logging.getLogger(__name__)
 
 
 def get_or_create_primary_schedule(updated_by=None):
@@ -73,17 +76,32 @@ def _is_schedule_due(schedule, now=None):
 
 def _safe_zip_write_directory(zip_handle, root_path, arc_prefix):
     if not root_path.exists() or not root_path.is_dir():
-        return 0
+        return {'files_added': 0, 'skipped_count': 0, 'skipped_samples': []}
 
     count = 0
+    skipped_samples = []
+    skipped_count = 0
     for file_path in root_path.rglob('*'):
         if not file_path.is_file():
             continue
+
+        # SQLite sidecar files are transient/lock-managed and commonly unreadable on Windows.
+        if arc_prefix == 'database' and file_path.name.lower().endswith(('-shm', '-wal', '-journal')):
+            skipped_count += 1
+            continue
+
         relative_path = file_path.relative_to(root_path)
         arcname = str(Path(arc_prefix) / relative_path).replace('\\', '/')
-        zip_handle.write(file_path, arcname=arcname)
-        count += 1
-    return count
+        try:
+            zip_handle.write(file_path, arcname=arcname)
+            count += 1
+        except OSError as exc:
+            skipped_count += 1
+            if len(skipped_samples) < 10:
+                skipped_samples.append({'path': str(file_path), 'error': str(exc)})
+            logger.warning('Skipping unreadable backup file: %s (%s)', file_path, exc)
+
+    return {'files_added': count, 'skipped_count': skipped_count, 'skipped_samples': skipped_samples}
 
 
 def _sanitize_zip_member(member_name):
@@ -106,6 +124,8 @@ def create_system_backup(schedule, created_by=None, trigger='manual'):
     backup_name = f'system_backup_{timestamp}_{slugify(scope_suffix)[:50] or "scope"}'
 
     files_added = 0
+    skipped_files = 0
+    skipped_samples = []
     job_type = (schedule.job_type or 'backup_cleanup').strip()
     metadata = {
         'created_at': timezone.localtime(timezone.now()).isoformat(),
@@ -124,7 +144,16 @@ def create_system_backup(schedule, created_by=None, trigger='manual'):
                 if not relative_dir:
                     continue
                 source_dir = base_dir / relative_dir
-                files_added += _safe_zip_write_directory(archive, source_dir, scope)
+                scope_result = _safe_zip_write_directory(archive, source_dir, scope)
+                files_added += scope_result['files_added']
+                skipped_files += scope_result['skipped_count']
+                skipped_samples.extend(scope_result['skipped_samples'])
+
+            if skipped_files:
+                metadata['skipped_files'] = {
+                    'count': skipped_files,
+                    'samples': skipped_samples[:10],
+                }
 
             archive.writestr('backup_metadata.json', json.dumps(metadata, indent=2))
 
@@ -134,6 +163,8 @@ def create_system_backup(schedule, created_by=None, trigger='manual'):
                 verification_ok = archive_to_verify.testzip() is None
 
         note_parts = [f'Files added: {files_added}']
+        if skipped_files:
+            note_parts.append(f'Skipped unreadable files: {skipped_files}')
         if job_type == 'backup_cleanup':
             note_parts.append('Mode: backup + cleanup')
         elif job_type == 'backup_verify':

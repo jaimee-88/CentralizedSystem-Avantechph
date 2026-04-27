@@ -212,6 +212,21 @@
                                 <span class="nav-label">Users</span>
                             </a>
                         {% endif %}
+                        <a class="nav-link app-nav-link {% if is_support_ticket_nav_active %}active{% endif %}" href="{% url 'support_tickets_list' %}">
+                            <span class="nav-logo" aria-hidden="true">
+                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 6.5C5 5.67 5.67 5 6.5 5H17.5C18.33 5 19 5.67 19 6.5V13.5C19 14.33 18.33 15 17.5 15H10.2L6.8 18V15H6.5C5.67 15 5 14.33 5 13.5V6.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                                    <path d="M8 8.5H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                    <path d="M8 11.5H13.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                </svg>
+                            </span>
+                            <span class="nav-label d-inline-flex align-items-center gap-2">
+                                <span>Support Tickets</span>
+                                {% if important_ticket_count %}
+                                    <span class="badge bg-danger">{{ important_ticket_count }}</span>
+                                {% endif %}
+                            </span>
+                        </a>
                         <a class="nav-link app-nav-link {% if request.resolver_match.url_name == 'development_hub' %}active{% endif %}" href="{% url 'development_hub' %}">
                             <span class="nav-logo" aria-hidden="true">
                                 <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -565,6 +580,21 @@
                             <span class="nav-label">Users</span>
                         </a>
                     {% endif %}
+                    <a class="nav-link app-nav-link {% if is_support_ticket_nav_active %}active{% endif %}" href="{% url 'support_tickets_list' %}">
+                        <span class="nav-logo" aria-hidden="true">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 6.5C5 5.67 5.67 5 6.5 5H17.5C18.33 5 19 5.67 19 6.5V13.5C19 14.33 18.33 15 17.5 15H10.2L6.8 18V15H6.5C5.67 15 5 14.33 5 13.5V6.5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                                <path d="M8 8.5H16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                <path d="M8 11.5H13.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                        <span class="nav-label d-inline-flex align-items-center gap-2">
+                            <span>Support Tickets</span>
+                            {% if important_ticket_count %}
+                                <span class="badge bg-danger">{{ important_ticket_count }}</span>
+                            {% endif %}
+                        </span>
+                    </a>
                     <a class="nav-link app-nav-link {% if request.resolver_match.url_name == 'development_hub' %}active{% endif %}" href="{% url 'development_hub' %}">
                         <span class="nav-logo" aria-hidden="true">
                             <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -14,6 +14,7 @@ from django.utils.dateparse import parse_date
 from PIL import Image
 
 from .auth_utils import get_client_ip
+from .permission_catalog import build_permission_groups
 from .models import (
     AssetAccountability,
     AssetDepartment,
@@ -32,6 +33,8 @@ from .models import (
     LiquidationAttachment,
     LiquidationLineItem,
     LiquidationTemplate,
+    SupportTicket,
+    SupportTicketMessage,
     PatchNote,
     PatchNoteAttachment,
     PatchNoteComment,
@@ -110,30 +113,7 @@ class BaseUserFormMixin:
     def build_grouped_permissions(self, field_name):
         field = self.fields[field_name]
         selected_values = self._selected_field_values(field_name)
-        grouped = {}
-
-        for permission in field.queryset:
-            app_label = permission.content_type.app_label.replace('_', ' ').title()
-            grouped.setdefault(app_label, []).append(
-                {
-                    'value': str(permission.pk),
-                    'label': permission.name,
-                    'checked': str(permission.pk) in selected_values,
-                }
-            )
-
-        result = []
-        for key, items in grouped.items():
-            selected_count = sum(1 for item in items if item['checked'])
-            result.append(
-                {
-                    'app_label': key,
-                    'items': items,
-                    'selected_count': selected_count,
-                    'total_count': len(items),
-                }
-            )
-        return result
+        return build_permission_groups(field.queryset, selected_values=selected_values)
 
 
 class StaffUserCreationForm(BaseUserFormMixin, UserCreationForm):
@@ -163,6 +143,10 @@ class StaffUserCreationForm(BaseUserFormMixin, UserCreationForm):
         self.fields['user_permissions'].queryset = Permission.objects.order_by('content_type__app_label', 'codename')
         self.fields['user_permissions'].widget = forms.CheckboxSelectMultiple()
         self.fields['user_permissions'].widget.choices = self.fields['user_permissions'].choices
+        self.fields['user_permissions'].label = 'Feature Access Overrides'
+        self.fields['user_permissions'].help_text = (
+            'Optional. Use this only for special cases when a user needs access different from their assigned roles.'
+        )
         self.fields['branch'].label = 'Branch'
         self.fields['branch'].help_text = 'Optional branch assignment (e.g., Main, North, South).'
         self._style_fields()
@@ -207,6 +191,10 @@ class StaffUserUpdateForm(BaseUserFormMixin, forms.ModelForm):
         self.fields['user_permissions'].queryset = Permission.objects.order_by('content_type__app_label', 'codename')
         self.fields['user_permissions'].widget = forms.CheckboxSelectMultiple()
         self.fields['user_permissions'].widget.choices = self.fields['user_permissions'].choices
+        self.fields['user_permissions'].label = 'Feature Access Overrides'
+        self.fields['user_permissions'].help_text = (
+            'Optional. Use this only for special cases when a user needs access different from their assigned roles.'
+        )
         profile = getattr(self.instance, 'profile', None)
         self.fields['branch'].initial = profile.branch if profile else ''
         self.fields['branch'].label = 'Branch'
@@ -236,36 +224,14 @@ class RoleForm(BaseUserFormMixin, forms.ModelForm):
         self.fields['permissions'].queryset = Permission.objects.order_by('content_type__app_label', 'codename')
         self.fields['permissions'].widget = forms.CheckboxSelectMultiple()
         self.fields['permissions'].widget.choices = self.fields['permissions'].choices
+        self.fields['permissions'].label = 'Feature Access'
+        self.fields['permissions'].help_text = 'Select which system features this role can access.'
         self.fields['name'].widget.attrs.update({'class': 'form-control'})
         self.fields['permissions'].widget.attrs.update({'class': 'checkbox-list', 'data-field-kind': 'permissions'})
 
     @property
     def grouped_permissions(self):
-        selected_values = self._selected_field_values('permissions')
-        grouped = {}
-
-        for permission in self.fields['permissions'].queryset:
-            app_label = permission.content_type.app_label.replace('_', ' ').title()
-            grouped.setdefault(app_label, []).append(
-                {
-                    'value': str(permission.pk),
-                    'label': permission.name,
-                    'checked': str(permission.pk) in selected_values,
-                }
-            )
-
-        result = []
-        for key, items in grouped.items():
-            selected_count = sum(1 for item in items if item['checked'])
-            result.append(
-                {
-                    'app_label': key,
-                    'items': items,
-                    'selected_count': selected_count,
-                    'total_count': len(items),
-                }
-            )
-        return result
+        return self.build_grouped_permissions('permissions')
 
 
 class SecureAuthenticationForm(AuthenticationForm):
@@ -1338,6 +1304,86 @@ class CompanyInternetAccountUnlockForm(forms.Form):
         if not self.user.check_password(provided_password):
             raise ValidationError('Current account password is incorrect.')
         return provided_password
+
+
+class SupportTicketCreateForm(forms.ModelForm):
+    class Meta:
+        model = SupportTicket
+        fields = ['title', 'category', 'description', 'requested_priority']
+        widgets = {
+            'title': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Short issue summary',
+                }
+            ),
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'description': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 5,
+                    'placeholder': 'Describe the issue, steps to reproduce, and affected system.',
+                }
+            ),
+            'requested_priority': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+    def clean_title(self):
+        title = (self.cleaned_data.get('title') or '').strip()
+        if not title:
+            raise ValidationError('Ticket title is required.')
+        return title
+
+    def clean_description(self):
+        description = (self.cleaned_data.get('description') or '').strip()
+        if not description:
+            raise ValidationError('Ticket description is required.')
+        return description
+
+
+class SupportTicketMessageForm(forms.ModelForm):
+    class Meta:
+        model = SupportTicketMessage
+        fields = ['message']
+        widgets = {
+            'message': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 3,
+                    'placeholder': 'Write your reply...',
+                }
+            ),
+        }
+
+    def clean_message(self):
+        message = (self.cleaned_data.get('message') or '').strip()
+        if not message:
+            raise ValidationError('Message cannot be empty.')
+        return message
+
+
+class SupportTicketRequesterPriorityForm(forms.ModelForm):
+    class Meta:
+        model = SupportTicket
+        fields = ['requested_priority']
+        widgets = {
+            'requested_priority': forms.Select(attrs={'class': 'form-select form-select-sm'}),
+        }
+
+
+class SupportTicketSupportUpdateForm(forms.ModelForm):
+    class Meta:
+        model = SupportTicket
+        fields = ['status', 'support_priority']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-select form-select-sm'}),
+            'support_priority': forms.Select(attrs={'class': 'form-select form-select-sm'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['support_priority'].required = False
+        self.fields['support_priority'].choices = [('', 'Use End User Priority')] + list(SupportTicket.PRIORITY_CHOICES)
 
 
 class DeveloperFeedbackForm(forms.ModelForm):
