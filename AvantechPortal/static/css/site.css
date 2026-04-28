@@ -41,6 +41,18 @@ body {
     color: rgba(255, 255, 255, 0.86) !important;
 }
 
+.hero-logo-wrap {
+    display: flex;
+    justify-content: center;
+}
+
+.hero-logo {
+    width: min(100%, 520px);
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 24px 28px rgba(4, 33, 18, 0.22));
+}
+
 .feature-card {
     backdrop-filter: blur(1px);
     border-left: 5px solid var(--ap-lime-400);
@@ -51,6 +63,39 @@ body {
     background:
         radial-gradient(circle at 20% 20%, rgba(183, 239, 74, 0.24), transparent 35%),
         linear-gradient(150deg, #f9fff8 0%, #eaf8ec 100%);
+}
+
+.captcha-refresh-scope {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.captcha-refresh-scope img.captcha {
+    order: 1;
+    border: 1px solid #d8ecd9;
+    border-radius: 8px;
+}
+
+.captcha-refresh-scope input[type="hidden"] {
+    display: none;
+}
+
+.captcha-refresh-scope input[name$="captcha_1"],
+.captcha-refresh-scope input[id$="captcha_1"] {
+    order: 3;
+    flex: 1 0 100%;
+}
+
+.captcha-refresh-btn {
+    order: 2;
+    width: 38px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }
 
 .app-body {

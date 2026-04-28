@@ -83,14 +83,79 @@
         wrapper.appendChild(button);
     }
 
+    function refreshCaptcha(button) {
+        var refreshUrl = button.dataset.captchaRefreshUrl;
+        if (!refreshUrl || !window.fetch) {
+            return;
+        }
+
+        var scope = button.closest('[data-captcha-scope="1"]') || button.closest('form') || document;
+        var image = scope.querySelector('img.captcha') || scope.querySelector('img[alt="captcha"]');
+        var hiddenKey = scope.querySelector('input[type="hidden"][name$="captcha_0"], input[type="hidden"][id$="captcha_0"]');
+        var responseField = scope.querySelector('input[name$="captcha_1"], input[id$="captcha_1"]');
+
+        button.disabled = true;
+
+        fetch(refreshUrl, {
+            credentials: 'same-origin',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('Failed to refresh captcha');
+                }
+                return response.json();
+            })
+            .then(function (data) {
+                if (image && data && data.image_url) {
+                    var separator = data.image_url.indexOf('?') === -1 ? '?' : '&';
+                    image.setAttribute('src', data.image_url + separator + 'refresh=' + Date.now());
+                }
+                if (hiddenKey && data && data.key) {
+                    hiddenKey.value = data.key;
+                }
+                if (responseField) {
+                    responseField.value = '';
+                    responseField.focus();
+                }
+            })
+            .catch(function (error) {
+                if (window.console && typeof window.console.warn === 'function') {
+                    window.console.warn('Captcha refresh failed', error);
+                }
+            })
+            .then(function () {
+                button.disabled = false;
+            });
+    }
+
+    function wireCaptchaRefresh(button) {
+        if (!button) {
+            return;
+        }
+        button.dataset.captchaRefreshBound = '1';
+    }
+
     function enhance(root) {
         var scope = root || document;
         scope.querySelectorAll('form').forEach(wireFormValidation);
         scope.querySelectorAll('input[type="password"]').forEach(wirePasswordToggle);
+        scope.querySelectorAll('.js-captcha-refresh').forEach(wireCaptchaRefresh);
     }
 
     document.addEventListener('DOMContentLoaded', function () {
         enhance(document);
+
+        document.addEventListener('click', function (event) {
+            var button = event.target.closest ? event.target.closest('.js-captcha-refresh') : null;
+            if (!button) {
+                return;
+            }
+            event.preventDefault();
+            refreshCaptcha(button);
+        });
 
         var observer = new MutationObserver(function (mutations) {
             mutations.forEach(function (mutation) {

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Avantech Portal | Welcome{% endblock %}
 
@@ -16,13 +17,8 @@
                 </div>
             </div>
             <div class="col-lg-5">
-                <div class="feature-card p-4 rounded-4 shadow-lg bg-light text-dark">
-                    <h2 class="h4 fw-bold mb-3">Why Avantech Portal?</h2>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item px-0">Centralized internal tools</li>
-                        <li class="list-group-item px-0">Secure user authentication</li>
-                        <li class="list-group-item px-0">Scalable architecture for future modules</li>
-                    </ul>
+                <div class="hero-logo-wrap">
+                    <img src="{% static 'img/avantech-home-logo.png' %}" alt="Avantech" class="hero-logo">
                 </div>
             </div>
         </div>
