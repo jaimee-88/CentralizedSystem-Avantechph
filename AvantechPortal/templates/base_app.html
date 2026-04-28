@@ -48,7 +48,7 @@
                             </a>
                         {% endif %}
                         {% if request.user.is_superuser or perms.core.view_fundrequest %}
-                            <div class="nav-link app-nav-link nav-group-label w-100 {% if is_finance_nav_active %}active{% endif %}">
+                            <button type="button" class="nav-link app-nav-link nav-group-label nav-group-trigger w-100 border-0 bg-transparent {% if is_finance_nav_active %}active is-open{% endif %}" aria-expanded="{% if is_finance_nav_active %}true{% else %}false{% endif %}">
                                 <span class="d-inline-flex align-items-center gap-2">
                                     <span class="nav-logo" aria-hidden="true">
                                         <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -60,7 +60,12 @@
                                     </span>
                                     <span class="nav-label">Finance</span>
                                 </span>
-                            </div>
+                                <span class="nav-group-caret" aria-hidden="true">
+                                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </button>
                             <div class="nav-subgroup">
                                 <a class="nav-link app-nav-link ms-4 {% if request.resolver_match.url_name == 'finance_dashboard' %}active{% endif %}" href="{% url 'finance_dashboard' %}" style="font-size: 0.9rem;">
                                     <span class="nav-logo" aria-hidden="true">
@@ -119,7 +124,7 @@
                             </div>
                         {% endif %}
                         {% if request.user.is_superuser or perms.core.view_assetitem or perms.core.view_assettrackercategory %}
-                            <div class="nav-link app-nav-link nav-group-label w-100 {% if is_asset_tracker_nav_active %}active{% endif %}">
+                            <button type="button" class="nav-link app-nav-link nav-group-label nav-group-trigger w-100 border-0 bg-transparent {% if is_asset_tracker_nav_active %}active is-open{% endif %}" aria-expanded="{% if is_asset_tracker_nav_active %}true{% else %}false{% endif %}">
                                 <span class="d-inline-flex align-items-center gap-2">
                                     <span class="nav-logo" aria-hidden="true">
                                         <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -131,7 +136,12 @@
                                     </span>
                                     <span class="nav-label">Asset Tracker</span>
                                 </span>
-                            </div>
+                                <span class="nav-group-caret" aria-hidden="true">
+                                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                            </button>
                             <div class="nav-subgroup">
                                 <a class="nav-link app-nav-link ms-4 {% if request.resolver_match.url_name == 'assets_list' or request.resolver_match.url_name == 'assets_department_create' or request.resolver_match.url_name == 'assets_department_update' or request.resolver_match.url_name == 'assets_item_create' or request.resolver_match.url_name == 'assets_item_update' or request.resolver_match.url_name == 'assets_item_delete' or request.resolver_match.url_name == 'assets_item_types_list' or request.resolver_match.url_name == 'assets_item_type_create' or request.resolver_match.url_name == 'assets_item_type_update' or request.resolver_match.url_name == 'assets_item_type_delete' or request.resolver_match.url_name == 'assets_tag_document' %}active{% endif %}" href="{% if request.user.is_superuser or perms.core.view_assetitem %}{% url 'assets_list' %}{% else %}{% url 'assets_item_types_list' %}{% endif %}" style="font-size: 0.9rem;">
                                     <span class="nav-logo" aria-hidden="true">
@@ -392,7 +402,7 @@
                         </a>
                     {% endif %}
                     {% if request.user.is_superuser or perms.core.view_fundrequest %}
-                        <div class="nav-link app-nav-link nav-group-label w-100 {% if is_finance_nav_active %}active{% endif %}">
+                        <button type="button" class="nav-link app-nav-link nav-group-label nav-group-trigger w-100 border-0 bg-transparent {% if is_finance_nav_active %}active is-open{% endif %}" aria-expanded="{% if is_finance_nav_active %}true{% else %}false{% endif %}">
                             <span class="d-inline-flex align-items-center gap-2">
                                 <span class="nav-logo" aria-hidden="true">
                                     <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -404,7 +414,12 @@
                                 </span>
                                 <span class="nav-label">Finance</span>
                             </span>
-                        </div>
+                            <span class="nav-group-caret" aria-hidden="true">
+                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </button>
                         <div class="nav-subgroup">
                             <a class="nav-link app-nav-link ms-4 {% if request.resolver_match.url_name == 'finance_dashboard' %}active{% endif %}" href="{% url 'finance_dashboard' %}" style="font-size: 0.9rem;">
                                 <span class="nav-logo" aria-hidden="true">
@@ -463,7 +478,7 @@
                         </div>
                     {% endif %}
                     {% if request.user.is_superuser or perms.core.view_assetitem or perms.core.view_assettrackercategory %}
-                        <div class="nav-link app-nav-link nav-group-label w-100 {% if is_asset_tracker_nav_active %}active{% endif %}">
+                        <button type="button" class="nav-link app-nav-link nav-group-label nav-group-trigger w-100 border-0 bg-transparent {% if is_asset_tracker_nav_active %}active is-open{% endif %}" aria-expanded="{% if is_asset_tracker_nav_active %}true{% else %}false{% endif %}">
                             <span class="d-inline-flex align-items-center gap-2">
                                 <span class="nav-logo" aria-hidden="true">
                                     <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -475,7 +490,12 @@
                                 </span>
                                 <span class="nav-label">Asset Tracker</span>
                             </span>
-                        </div>
+                            <span class="nav-group-caret" aria-hidden="true">
+                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </span>
+                        </button>
                         <div class="nav-subgroup">
                             <a class="nav-link app-nav-link ms-4 {% if request.resolver_match.url_name == 'assets_list' or request.resolver_match.url_name == 'assets_department_create' or request.resolver_match.url_name == 'assets_department_update' or request.resolver_match.url_name == 'assets_item_create' or request.resolver_match.url_name == 'assets_item_update' or request.resolver_match.url_name == 'assets_item_delete' or request.resolver_match.url_name == 'assets_item_types_list' or request.resolver_match.url_name == 'assets_item_type_create' or request.resolver_match.url_name == 'assets_item_type_update' or request.resolver_match.url_name == 'assets_item_type_delete' or request.resolver_match.url_name == 'assets_tag_document' %}active{% endif %}" href="{% if request.user.is_superuser or perms.core.view_assetitem %}{% url 'assets_list' %}{% else %}{% url 'assets_item_types_list' %}{% endif %}" style="font-size: 0.9rem;">
                                 <span class="nav-logo" aria-hidden="true">
@@ -820,6 +840,13 @@
                 toggle.setAttribute('aria-pressed', isCollapsed ? 'true' : 'false');
             });
         }
+
+        document.querySelectorAll('.nav-group-trigger').forEach((trigger) => {
+            trigger.addEventListener('click', () => {
+                const isOpen = trigger.classList.toggle('is-open');
+                trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+        });
 
         (function () {
             const toastContainer = document.getElementById('appBottomToastContainer');

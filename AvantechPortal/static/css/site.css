@@ -181,7 +181,30 @@ body {
 
 .nav-group-label {
     width: 100%;
-    cursor: default;
+    cursor: pointer;
+}
+
+.nav-group-trigger {
+    justify-content: space-between;
+}
+
+.nav-group-caret {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.nav-group-trigger.is-open .nav-group-caret {
+    transform: rotate(180deg);
+}
+
+.nav-subgroup {
+    display: none;
+}
+
+.nav-group-trigger.is-open + .nav-subgroup {
+    display: block;
 }
 
 .nav-group-label:hover {
@@ -560,6 +583,14 @@ body {
     padding-right: 0 !important;
 }
 
+.app-shell.sidebar-collapsed .app-sidebar .nav-group-trigger.is-open + .nav-subgroup {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    width: 100%;
+}
+
 .app-shell.sidebar-collapsed .app-sidebar .app-nav-link {
     width: 44px !important;
     height: 44px;
@@ -569,6 +600,23 @@ body {
     text-align: center;
     gap: 0;
     border-radius: 12px;
+}
+
+.app-shell.sidebar-collapsed .app-sidebar .nav-group-trigger {
+    position: relative;
+}
+
+.app-shell.sidebar-collapsed .app-sidebar .nav-group-caret {
+    position: absolute;
+    right: 1px;
+    bottom: 1px;
+    width: 13px;
+    height: 13px;
+}
+
+.app-shell.sidebar-collapsed .app-sidebar .nav-group-caret .icon-svg {
+    width: 12px;
+    height: 12px;
 }
 
 .app-shell.sidebar-collapsed .app-sidebar .sidebar-brand {
