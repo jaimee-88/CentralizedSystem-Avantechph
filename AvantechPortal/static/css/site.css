@@ -106,11 +106,28 @@ body {
     width: 36px;
     height: 36px;
     border-radius: 10px;
+    background: transparent;
+    border: 0;
 }
 
-.brand-logo .icon-svg {
-    width: 20px;
-    height: 20px;
+.brand-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.public-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.public-brand-logo {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+    display: block;
 }
 
 .brand-text,
@@ -165,22 +182,6 @@ body {
 .nav-group-label {
     width: 100%;
     cursor: default;
-}
-
-.nav-group-toggle {
-    justify-content: space-between;
-    cursor: pointer;
-}
-
-.nav-group-caret {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s ease;
-}
-
-.nav-group-toggle[aria-expanded="true"] .nav-group-caret {
-    transform: rotate(180deg);
 }
 
 .nav-group-label:hover {
@@ -537,17 +538,62 @@ body {
 
 .app-shell.sidebar-collapsed .app-sidebar .brand-text,
 .app-shell.sidebar-collapsed .app-sidebar .nav-label,
-.app-shell.sidebar-collapsed .app-sidebar .sidebar-section-title {
-    display: none;
+.app-shell.sidebar-collapsed .app-sidebar .sidebar-section-title,
+.app-shell.sidebar-collapsed .app-sidebar .nav-subgroup {
+    display: none !important;
+}
+
+.app-shell.sidebar-collapsed .app-sidebar .sidebar-header {
+    flex-direction: column;
+    justify-content: center !important;
+    gap: 0.45rem;
+    padding: 0.75rem 0.5rem !important;
+}
+
+.app-shell.sidebar-collapsed .app-sidebar .sidebar-body {
+    height: calc(100vh - 109px);
+}
+
+.app-shell.sidebar-collapsed .app-sidebar .sidebar-primary nav {
+    align-items: center;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 .app-shell.sidebar-collapsed .app-sidebar .app-nav-link {
+    width: 44px !important;
+    height: 44px;
+    margin-left: 0 !important;
+    padding: 0 !important;
     justify-content: center;
     text-align: center;
+    gap: 0;
+    border-radius: 12px;
 }
 
 .app-shell.sidebar-collapsed .app-sidebar .sidebar-brand {
+    width: 44px;
+    height: 44px;
     justify-content: center;
+}
+
+.app-shell.sidebar-collapsed .app-sidebar .brand-logo {
+    width: 44px;
+    height: 44px;
+}
+
+.app-shell.sidebar-collapsed .app-sidebar #sidebarToggle {
+    width: 36px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.app-shell.sidebar-collapsed .app-sidebar .sidebar-settings {
+    display: flex;
+    justify-content: center;
+    padding: 0.75rem 0 !important;
 }
 
 .mobile-sidebar-body {

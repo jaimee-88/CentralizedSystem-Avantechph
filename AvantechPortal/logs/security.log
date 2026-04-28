@@ -210,3 +210,33 @@
 [2026-04-24 16:57:23,897] ERROR auth_security: User locked out username=admin ip=127.0.0.1
 [2026-04-24 16:57:23,898] WARNING auth_security: Failed login username=admin ip=::1
 [2026-04-24 16:57:51,273] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 07:55:22,297] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 07:55:22,684] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 07:55:47,667] INFO axes.handlers.database: AXES: Successful login by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"}.
+[2026-04-28 07:55:47,668] INFO axes.handlers.database: AXES: Cleaned up 1 expired access attempts from database that were older than 2026-04-27 22:55:47.339747+00:00
+[2026-04-28 07:55:47,670] INFO axes.handlers.database: AXES: Reset 0 access attempts from database.
+[2026-04-28 07:55:47,670] INFO axes.handlers.database: AXES: Deleted 0 failed login attempts by {username: "********************", ip_address: "********************", user_agent: "Mozilla/5.0 (X11; Linux x86_64; rv:149.0) Gecko/20100101 Firefox/149.0", path_info: "/login/"} from database.
+[2026-04-28 07:55:47,671] INFO auth_security: Successful login user=jaime ip=127.0.0.1 suspicious=True
+[2026-04-28 07:59:40,639] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:00:05,397] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:00:24,958] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:00:40,432] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:01:38,452] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:01:38,725] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:02:00,636] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:02:00,920] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:08:17,728] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:08:18,261] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:08:18,550] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:08:45,992] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:09:25,219] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:09:38,596] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:09:43,374] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:12:21,046] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:12:25,671] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:19:29,161] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:36:27,176] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:38:38,376] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:41:35,723] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:41:51,253] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address
+[2026-04-28 08:43:06,879] INFO axes.apps: AXES: BEGIN version 8.3.1, blocking by ip_address or combination of username and ip_address

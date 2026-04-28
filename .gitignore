@@ -1,0 +1,30 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Django / runtime artifacts
+*.log
+
+# Local SQLite databases
+*.sqlite3
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
+
+# Project runtime folders (keep dirs via .gitkeep)
+AvantechPortal/logs/**
+!AvantechPortal/logs/**/.gitkeep
+
+AvantechPortal/database/**
+!AvantechPortal/database/**/.gitkeep
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/

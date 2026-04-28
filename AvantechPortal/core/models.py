@@ -1363,7 +1363,18 @@ class CompanyInternetAccount(models.Model):
 		return self.submitted_by.get_full_name() or self.submitted_by.username
 
 
-database_storage = FileSystemStorage(location=Path(settings.BASE_DIR) / 'database')
+class ProjectDatabaseStorage(FileSystemStorage):
+	def __init__(self, *args, **kwargs):
+		location = kwargs.pop('location', None)
+		if location is None:
+			location = Path(settings.BASE_DIR) / 'database'
+		super().__init__(location=location, *args, **kwargs)
+
+	def deconstruct(self):
+		return ('core.models.ProjectDatabaseStorage', [], {})
+
+
+database_storage = ProjectDatabaseStorage()
 
 
 def database_file_upload_to(instance, filename):

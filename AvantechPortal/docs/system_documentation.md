@@ -62,6 +62,22 @@ Key core module files:
 
 ---
 
+## 3.1 Local Development (Important)
+
+When you pull new code, switch branches, or deploy to a new environment, always apply migrations before running the server. If you skip this, you may see runtime errors like `OperationalError: no such table ...`.
+
+Recommended dev command (runs `migrate` then starts the server):
+
+- `bash scripts/dev-up.sh`
+
+Manual equivalent:
+
+- `cd AvantechPortal`
+- `../.venv/bin/python manage.py migrate`
+- `../.venv/bin/python manage.py runserver`
+
+---
+
 ## 4. Core Functional Modules
 
 ### 4.1 Authentication and Account Security
