@@ -6984,16 +6984,46 @@ def _build_accountability_template_file_payload(accountability):
 	output_name = f'asset-accountability-{accountability.control_number or accountability.pk}{extension}'
 	rendered_template = _render_fund_request_template_binary_from_template(template_record, placeholders, line_items, output_name)
 	if rendered_template:
-		return rendered_template
+		pdf_bytes = _convert_office_bytes_to_pdf(
+			rendered_template['content'],
+			rendered_template['filename'],
+			allow_structured_preview_fallback=False,
+		)
+		if pdf_bytes:
+			return {
+				'content': pdf_bytes,
+				'content_type': 'application/pdf',
+				'filename': f'{Path(rendered_template["filename"]).stem}.pdf',
+				'template_record': template_record,
+				'extension': '.pdf',
+				'source': 'template_generated_pdf',
+			}
 
 	if extension == '.pdf':
 		with template_record.file.open('rb') as template_file:
 			return {
 				'content': template_file.read(),
 				'content_type': 'application/pdf',
-				'filename': output_name,
+				'filename': f'asset-accountability-{accountability.control_number or accountability.pk}.pdf',
 				'template_record': template_record,
 				'extension': extension,
+				'source': 'template_pdf',
+			}
+	if extension in {'.doc', '.xls'}:
+		with template_record.file.open('rb') as template_file:
+			pdf_bytes = _convert_office_bytes_to_pdf(
+				template_file.read(),
+				Path(template_record.file.name).name,
+				allow_structured_preview_fallback=False,
+			)
+		if pdf_bytes:
+			return {
+				'content': pdf_bytes,
+				'content_type': 'application/pdf',
+				'filename': f'asset-accountability-{accountability.control_number or accountability.pk}.pdf',
+				'template_record': template_record,
+				'extension': '.pdf',
+				'source': 'template_converted_pdf',
 			}
 	return None
 
@@ -7203,7 +7233,10 @@ def accountability_document_download(request, accountability_id):
 	)
 	payload = _build_accountability_template_file_payload(accountability)
 	if not payload:
-		messages.warning(request, 'Upload an active DOCX or XLSX accountability template before downloading documents.')
+		messages.warning(
+			request,
+			'Unable to generate the accountability PDF. Upload an active PDF, DOCX, XLSX, DOC, or XLS template and make sure a server-side converter is available.',
+		)
 		return redirect('accountability_list')
 
 	response = HttpResponse(payload['content'], content_type=payload['content_type'])

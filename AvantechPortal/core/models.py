@@ -1261,7 +1261,7 @@ class AssetAccountability(models.Model):
 	def _assign_control_number(self):
 		current_year = timezone.localdate().year
 		if self.request_year and self.control_sequence:
-			self.control_number = f'AA-{self.request_year}-{self.control_sequence:04d}'
+			self.control_number = f'{self.request_year}-{self.control_sequence:04d}'
 			return
 
 		self.request_year = current_year
@@ -1275,10 +1275,14 @@ class AssetAccountability(models.Model):
 				or 0
 			)
 			self.control_sequence = latest_sequence + 1
-			self.control_number = f'AA-{self.request_year}-{self.control_sequence:04d}'
+			self.control_number = f'{self.request_year}-{self.control_sequence:04d}'
 
 	def save(self, *args, **kwargs):
-		if not self.control_number or not self.request_year or not self.control_sequence:
+		needs_control_number = (
+			self.request_status == 'approved'
+			and (not self.control_number or not self.request_year or not self.control_sequence)
+		)
+		if needs_control_number:
 			self._assign_control_number()
 			update_fields = kwargs.get('update_fields')
 			if update_fields is not None:
@@ -1296,7 +1300,18 @@ class AssetAccountability(models.Model):
 		self.processed_by = processed_by
 		self.processed_at = timezone.now()
 		self.decision_reason = reason or ''
-		self.save(update_fields=['request_status', 'status', 'processed_by', 'processed_at', 'decision_reason', 'updated_at'])
+		self._assign_control_number()
+		self.save(update_fields=[
+			'control_number',
+			'request_year',
+			'control_sequence',
+			'request_status',
+			'status',
+			'processed_by',
+			'processed_at',
+			'decision_reason',
+			'updated_at',
+		])
 		return True
 
 	def mark_declined(self, processed_by=None, reason=''):
